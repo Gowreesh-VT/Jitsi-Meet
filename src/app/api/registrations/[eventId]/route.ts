@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { isValidObjectId } from "mongoose";
 import { authOptions } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongodb";
 import Registration, { type RegistrationDocument } from "@/models/Registration";
@@ -8,6 +9,8 @@ type Params = { params: Promise<{ eventId: string }> };
 
 export async function GET(_request: Request, { params }: Params) {
   const { eventId } = await params;
+  if (!isValidObjectId(eventId)) return NextResponse.json({ message: "Event not found" }, { status: 404 });
+
   const session = await getServerSession(authOptions);
   if (!session?.user.id) {
     return NextResponse.json({ message: "Sign in required" }, { status: 401 });
@@ -30,7 +33,9 @@ export async function GET(_request: Request, { params }: Params) {
         schoolCollegeName: reg.schoolCollegeName,
         institutionType: reg.institutionType,
         grade: reg.grade,
+        year: reg.year,
         registeredAt: reg.registeredAt?.toISOString(),
+        meetHistory: reg.meetHistory,
       };
     }),
   });
