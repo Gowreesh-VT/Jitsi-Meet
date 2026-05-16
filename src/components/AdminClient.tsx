@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Edit, Eye, EyeOff, Trash2, UserPlus } from "lucide-react";
+import { Edit, Eye, EyeOff, Radio, Square, Trash2, UserPlus } from "lucide-react";
 import { AdminEventForm } from "@/components/AdminEventForm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ type Participant = {
     image?: string;
   };
   registeredAt?: string;
+  meetHistory?: Array<{ joinedAt: string; leftAt?: string }>;
 };
 
 export function AdminClient({ initialEvents }: { initialEvents: SerializedEvent[] }) {
@@ -56,6 +57,11 @@ export function AdminClient({ initialEvents }: { initialEvents: SerializedEvent[
 
   async function togglePublished(event: SerializedEvent) {
     await savePatch(event._id, { isPublished: !event.isPublished }, event.isPublished ? "Event unpublished" : "Event published");
+  }
+
+  async function setManualStatus(event: SerializedEvent, statusOverride: SerializedEvent["statusOverride"]) {
+    const title = statusOverride === "auto" ? "Event status returned to auto" : `Event marked ${statusOverride}`;
+    await savePatch(event._id, { statusOverride }, title);
   }
 
   async function savePatch(id: string, payload: Record<string, unknown>, title: string) {
@@ -165,7 +171,8 @@ export function AdminClient({ initialEvents }: { initialEvents: SerializedEvent[
                     <div className="mb-2 flex flex-wrap gap-2">
                       <Badge variant={event.isPublished ? "default" : "muted"}>{event.isPublished ? "Published" : "Draft"}</Badge>
                       <Badge variant="secondary">{event.domain}</Badge>
-                      <Badge variant="outline">{getStatus(event.startTime, event.endTime)}</Badge>
+                      <Badge variant="outline">{getStatus(event.startTime, event.endTime, event.statusOverride)}</Badge>
+                      {event.statusOverride !== "auto" ? <Badge variant="secondary">Manual</Badge> : null}
                     </div>
                     <CardTitle>{event.title}</CardTitle>
                     <CardDescription>{date} · {time} · {event.roomName}</CardDescription>
@@ -179,6 +186,14 @@ export function AdminClient({ initialEvents }: { initialEvents: SerializedEvent[
                       {event.isPublished ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       {event.isPublished ? "Unpublish" : "Publish"}
                     </Button>
+                    <Button variant={event.isLive ? "default" : "outline"} size="sm" onClick={() => savePatch(event._id, { isLive: !event.isLive }, event.isLive ? "Meet closed" : "Meet opened")}>
+                      <Radio className={`h-4 w-4 ${event.isLive ? "animate-pulse" : ""}`} />
+                      {event.isLive ? "Live ON" : "Open Meet"}
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => setManualStatus(event, event.statusOverride === "ended" ? "auto" : "ended")}>
+                      <Square className="h-4 w-4" />
+                      {event.statusOverride === "ended" ? "Auto" : "Mark Ended"}
+                    </Button>
                     <Button variant="destructive" size="sm" onClick={() => deleteEvent(event._id)}>
                       <Trash2 className="h-4 w-4" />
                       Delete
@@ -187,9 +202,17 @@ export function AdminClient({ initialEvents }: { initialEvents: SerializedEvent[
                 </div>
               </CardHeader>
               <CardContent>
-                <Button variant="secondary" size="sm" onClick={() => loadParticipants(event._id)}>
-                  View participants
-                </Button>
+                <div className="flex items-center gap-4">
+                  <Button variant="secondary" size="sm" onClick={() => loadParticipants(event._id)}>
+                    View participants
+                  </Button>
+                  {list && (
+                    <div className="flex items-center gap-2 text-sm font-bold text-green-500">
+                      <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                      {list.filter(p => p.meetHistory?.some(h => !h.leftAt)).length} IN MEET
+                    </div>
+                  )}
+                </div>
                 {loadingParticipants === event._id ? <Skeleton className="mt-4 h-16" /> : null}
                 {list ? (
                   <div className="mt-4 rounded-md border">

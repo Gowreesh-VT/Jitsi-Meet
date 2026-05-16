@@ -9,11 +9,13 @@ import { Label } from "@/components/ui/label";
 
 type EventFormState = {
   title: string;
+  description: string;
   domain: string;
   type: string;
   startTime: string;
   endTime: string;
   roomName: string;
+  statusOverride: "auto" | "live" | "ended";
   isPublished: boolean;
 };
 
@@ -21,33 +23,39 @@ function getInitialForm(event?: SerializedEvent | null): EventFormState {
   if (event) {
     return {
       title: event.title,
+      description: event.description,
       domain: event.domain,
       type: event.type,
       startTime: toLocalDatetime(event.startTime),
       endTime: toLocalDatetime(event.endTime),
       roomName: event.roomName,
+      statusOverride: event.statusOverride,
       isPublished: event.isPublished,
     };
   }
 
   return {
     title: "",
+    description: "",
     domain: "AI/ML",
     type: "session",
     startTime: "",
     endTime: "",
     roomName: "",
+    statusOverride: "auto",
     isPublished: false,
   };
 }
 
 const emptyForm: EventFormState = {
   title: "",
+  description: "",
   domain: "AI/ML",
   type: "session",
   startTime: "",
   endTime: "",
   roomName: "",
+  statusOverride: "auto",
   isPublished: false,
 };
 
@@ -86,6 +94,17 @@ export function AdminEventForm({
       <div className="grid gap-2">
         <Label htmlFor="title">Title</Label>
         <Input id="title" required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="description">Description</Label>
+        <textarea
+          id="description"
+          required
+          rows={4}
+          className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+        />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
@@ -128,6 +147,19 @@ export function AdminEventForm({
       <div className="grid gap-2">
         <Label htmlFor="roomName">Jitsi room name</Label>
         <Input id="roomName" required value={form.roomName} onChange={(e) => setForm({ ...form, roomName: e.target.value })} />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="statusOverride">Manual status</Label>
+        <select
+          id="statusOverride"
+          className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+          value={form.statusOverride}
+          onChange={(e) => setForm({ ...form, statusOverride: e.target.value as EventFormState["statusOverride"] })}
+        >
+          <option value="auto">Auto from schedule</option>
+          <option value="live">Live</option>
+          <option value="ended">Ended</option>
+        </select>
       </div>
       <label className="flex items-center gap-3 text-sm font-medium">
         <input
