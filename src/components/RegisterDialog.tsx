@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
@@ -64,7 +64,11 @@ export function RegisterDialog({
     },
   });
 
-  const institutionType = form.watch("institutionType");
+  const institutionType = useWatch({
+    control: form.control,
+    name: "institutionType",
+    defaultValue: "College",
+  });
 
 
   async function onSubmit(values: FormValues) {

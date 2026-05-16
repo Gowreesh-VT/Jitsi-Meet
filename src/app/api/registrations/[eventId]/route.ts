@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongodb";
-import Registration from "@/models/Registration";
+import Registration, { type RegistrationDocument } from "@/models/Registration";
 
 type Params = { params: Promise<{ eventId: string }> };
 
@@ -18,17 +18,20 @@ export async function GET(_request: Request, { params }: Params) {
   const registrations = await Registration.find(filter).populate("userId", "name email image").sort({ registeredAt: 1 });
 
   return NextResponse.json({
-    registrations: registrations.map((registration) => ({
-      _id: String(registration._id),
-      eventId: String(registration.eventId),
-      userId: String(registration.userId?._id ?? registration.userId),
-      user: typeof registration.userId === "object" && "email" in registration.userId ? registration.userId : undefined,
-      mobileNumber: registration.mobileNumber,
-      registrationNumber: registration.registrationNumber,
-      schoolCollegeName: registration.schoolCollegeName,
-      institutionType: (registration as any).institutionType,
-      grade: (registration as any).grade,
-      registeredAt: registration.registeredAt?.toISOString(),
-    })),
+    registrations: registrations.map((registration) => {
+      const reg = registration as unknown as RegistrationDocument;
+      return {
+        _id: String(reg._id),
+        eventId: String(reg.eventId),
+        userId: String(reg.userId?._id ?? reg.userId),
+        user: typeof reg.userId === "object" && "email" in reg.userId ? reg.userId : undefined,
+        mobileNumber: reg.mobileNumber,
+        registrationNumber: reg.registrationNumber,
+        schoolCollegeName: reg.schoolCollegeName,
+        institutionType: reg.institutionType,
+        grade: reg.grade,
+        registeredAt: reg.registeredAt?.toISOString(),
+      };
+    }),
   });
 }

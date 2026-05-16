@@ -17,7 +17,7 @@ const RegistrationSchema = new Schema({
 
 RegistrationSchema.index({ eventId: 1, userId: 1 }, { unique: true });
 
-export type RegistrationDocument = InferSchemaType<typeof RegistrationSchema>;
+export type RegistrationDocument = InferSchemaType<typeof RegistrationSchema> & { _id: mongoose.Types.ObjectId };
 
 export default (mongoose.models.Registration as Model<RegistrationDocument>) ||
   mongoose.model<RegistrationDocument>("Registration", RegistrationSchema);
