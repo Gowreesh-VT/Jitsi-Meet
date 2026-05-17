@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { authOptions } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongodb";
 import { ensureSeedEvents } from "@/lib/seed";
-import { getStatus, serializeEvent } from "@/lib/events";
+import { serializeEvent } from "@/lib/events";
 import Registration from "@/models/Registration";
 import ClientOnlyDashboard from "@/components/DashboardClient";
 
@@ -29,10 +29,6 @@ export default async function DashboardPage() {
     .map((registration) => registration.eventId)
     .filter(Boolean)
     .map((event) => serializeEvent(event as never));
-
-  const live = events.filter((event) => event.isLive || getStatus(event.startTime, event.endTime, event.statusOverride) === "Live");
-  const upcoming = events.filter((event) => !event.isLive && getStatus(event.startTime, event.endTime, event.statusOverride) === "Upcoming");
-  const past = events.filter((event) => !event.isLive && getStatus(event.startTime, event.endTime, event.statusOverride) === "Ended");
 
   return (
     <div className="schedule-retro relative min-h-screen">

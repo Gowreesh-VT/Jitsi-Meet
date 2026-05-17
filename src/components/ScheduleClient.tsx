@@ -9,7 +9,6 @@ import { SymbolIcon } from "@/components/event-cards";
 import { DOMAINS, formatEventWindow, getMeetUrl, getStatus, type Domain, type SerializedEvent } from "@/lib/events";
 import { useSession, signIn } from "next-auth/react";
 import { toast } from "sonner";
-import JitsiMeet from "./JitsiMeet";
 
 type Accent = "blue" | "green" | "red" | "yellow";
 
@@ -52,7 +51,6 @@ export function ScheduleClient({
   const [selectedEvent, setSelectedEvent] = React.useState<SerializedEvent | null>(null);
   const [showRegister, setShowRegister] = React.useState(false);
   const [filter, setFilter] = React.useState<string>("All");
-  const [activeMeet, setActiveMeet] = React.useState<SerializedEvent | null>(null);
   const [eventStatuses, setEventStatuses] = React.useState<Record<string, EventStatusData>>({});
   const [savedProfile, setSavedProfile] = React.useState<SavedProfile | null>(null);
   const { data: session } = useSession();
@@ -141,11 +139,6 @@ export function ScheduleClient({
   const upcomingEvents = filteredEvents.filter((event) => getStatus(event.startTime, event.endTime, event.statusOverride) === "Upcoming");
   const pastEvents = filteredEvents.filter((event) => getStatus(event.startTime, event.endTime, event.statusOverride) === "Ended");
 
-  function openRegister(event: SerializedEvent) {
-    setSelectedEvent(event);
-    setShowRegister(true);
-  }
-
   function onRegisterSuccess(eventId: string) {
     setRegistrations((current) => Array.from(new Set([...current, eventId])));
     // Ensure local status cache reflects the new registration immediately
@@ -160,20 +153,8 @@ export function ScheduleClient({
     setShowRegister(false);
   }
 
-  function handleLeave(): void {
-    throw new Error("Function not implemented.");
-  }
-
   return (
     <div className="space-y-16">
-      {activeMeet && session?.user && (
-        <JitsiMeet
-          roomName={activeMeet.roomName}
-          userName={session.user.name || "User"}
-          userEmail={session.user.email || ""}
-          onLeave={handleLeave}
-        />
-      )}
       <div className="mb-12 flex justify-center">
         <div className="flex flex-wrap justify-center gap-1 rounded-xl border border-white/10 bg-black/40 p-1.5 backdrop-blur-md">
           {["All", ...DOMAINS].map((domain) => (
