@@ -25,7 +25,6 @@ export default async function LandingPage() {
       <div className="scanline-overlay" />
       
       {/* Floating Retro Icons (Decorative) */}
-      
       <div className="main-shell flex flex-col items-center justify-center pt-20">
         <div className="hero animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="hero-logo mb-6">

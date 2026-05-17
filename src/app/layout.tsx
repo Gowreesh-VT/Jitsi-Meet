@@ -2,10 +2,20 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/Navbar";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
-import { Geist } from "next/font/google";
+import { JetBrains_Mono, Press_Start_2P } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-jetbrains-mono",
+});
+
+const pressStart = Press_Start_2P({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-press-start",
+});
 
 export const metadata: Metadata = {
   title: "Microsoft Innovations Club Meet Portal",
@@ -23,7 +33,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en" suppressHydrationWarning className={cn("dark h-full antialiased", "font-sans", geist.variable)}>
+    <html lang="en" suppressHydrationWarning className={cn("dark h-full antialiased", "font-sans", jetbrainsMono.variable, pressStart.variable)}>
       <body className="flex min-h-screen flex-col bg-background text-foreground">
         <Providers session={session}>
           <Navbar />
