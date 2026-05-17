@@ -4,12 +4,12 @@ import * as React from "react";
 import { Calendar, ExternalLink, Video, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { RegisterDialog } from "@/components/RegisterDialog";
+import { RegisterDialog, type SavedProfile } from "@/components/RegisterDialog";
 import { SymbolIcon } from "@/components/event-cards";
-import { DOMAINS, formatEventWindow, getStatus, type Domain, type SerializedEvent } from "@/lib/events";
-import JitsiMeet from "@/components/JitsiMeet";
+import { DOMAINS, formatEventWindow, getMeetUrl, getStatus, type Domain, type SerializedEvent } from "@/lib/events";
 import { useSession, signIn } from "next-auth/react";
 import { toast } from "sonner";
+import JitsiMeet from "./JitsiMeet";
 
 type Accent = "blue" | "green" | "red" | "yellow";
 
@@ -54,7 +54,17 @@ export function ScheduleClient({
   const [filter, setFilter] = React.useState<string>("All");
   const [activeMeet, setActiveMeet] = React.useState<SerializedEvent | null>(null);
   const [eventStatuses, setEventStatuses] = React.useState<Record<string, EventStatusData>>({});
+  const [savedProfile, setSavedProfile] = React.useState<SavedProfile | null>(null);
   const { data: session } = useSession();
+
+  React.useEffect(() => {
+    if (session?.user) {
+      fetch("/api/user/profile")
+        .then((r) => r.json())
+        .then((data) => setSavedProfile(data.profile ?? null))
+        .catch(() => setSavedProfile(null));
+    }
+  }, [session?.user]);
 
   const fetchStatus = React.useCallback(async (eventId: string) => {
     try {
@@ -79,7 +89,7 @@ export function ScheduleClient({
     };
 
     checkAll();
-    const interval = window.setInterval(checkAll, 60_000);
+    const interval = window.setInterval(checkAll, 15_000);
     return () => window.clearInterval(interval);
   }, [initialEvents, fetchStatus]);
 
@@ -116,24 +126,14 @@ export function ScheduleClient({
     }
 
     // If we get here, it's joinable
+    const meetUrl = getMeetUrl(event.roomName);
+    window.open(meetUrl, '_blank');
+
     try {
-      await fetch(`/api/events/${event._id}/meet/join`, { method: "POST" });
-      setActiveMeet(event);
+      fetch(`/api/events/${event._id}/meet/join`, { method: "POST" }).catch(console.error);
     } catch (error) {
       console.error("Failed to log join", error);
-      setActiveMeet(event); // Still try to join
     }
-  }
-
-  async function handleLeave() {
-    if (activeMeet) {
-      try {
-        await fetch(`/api/events/${activeMeet._id}/meet/leave`, { method: "POST" });
-      } catch (error) {
-        console.error("Failed to log leave", error);
-      }
-    }
-    setActiveMeet(null);
   }
 
   const filteredEvents = initialEvents.filter((event) => filter === "All" || event.domain === filter);
@@ -148,7 +148,20 @@ export function ScheduleClient({
 
   function onRegisterSuccess(eventId: string) {
     setRegistrations((current) => Array.from(new Set([...current, eventId])));
+    // Ensure local status cache reflects the new registration immediately
+    setEventStatuses((prev) => ({
+      ...prev,
+      [eventId]: {
+        ...(prev[eventId] ?? {}),
+        isRegistered: true,
+        isLoggedIn: true,
+      } as EventStatusData,
+    }));
     setShowRegister(false);
+  }
+
+  function handleLeave(): void {
+    throw new Error("Function not implemented.");
   }
 
   return (
@@ -183,7 +196,7 @@ export function ScheduleClient({
         <LiveEventSection 
           events={liveEvents} 
           registrations={registrations} 
-          onRegisterClick={openRegister}
+          onCardClick={setSelectedEvent}
           onJoin={handleJoin}
           eventStatuses={eventStatuses}
         />
@@ -196,6 +209,7 @@ export function ScheduleClient({
           event={selectedEvent}
           isRegistered={registrations.includes(selectedEvent._id)}
           isVitStudent={isVitStudent}
+          savedProfile={savedProfile}
           eventStatuses={eventStatuses}
           showRegister={showRegister}
           onRegisterClick={() => setShowRegister(true)}
@@ -216,13 +230,13 @@ export function ScheduleClient({
 function LiveEventSection({
   events,
   registrations,
-  onRegisterClick,
+  onCardClick,
   onJoin,
   eventStatuses,
 }: {
   events: SerializedEvent[];
   registrations: string[];
-  onRegisterClick: (event: SerializedEvent) => void;
+  onCardClick: (event: SerializedEvent) => void;
   onJoin: (event: SerializedEvent) => void;
   eventStatuses: Record<string, EventStatusData>;
 }) {
@@ -241,7 +255,7 @@ function LiveEventSection({
             event={event}
             statusData={eventStatuses[event._id]}
             onJoin={() => onJoin(event)}
-            onRegisterClick={() => onRegisterClick(event)}
+            onCardClick={() => onCardClick(event)}
             initialIsRegistered={registrations.includes(event._id)}
           />
         ))}
@@ -254,13 +268,13 @@ function LiveEventCard({
   event,
   statusData,
   onJoin,
-  onRegisterClick,
+  onCardClick,
   initialIsRegistered,
 }: {
   event: SerializedEvent;
   statusData?: EventStatusData;
   onJoin: () => void;
-  onRegisterClick: () => void;
+  onCardClick: () => void;
   initialIsRegistered: boolean;
 }) {
   const { date, time } = formatEventWindow(event.startTime, event.endTime);
@@ -268,33 +282,38 @@ function LiveEventCard({
   const isLive = statusData?.isLive ?? event.isLive;
   const statusOverride = statusData?.statusOverride ?? event.statusOverride;
   const currentStatus = getStatus(event.startTime, event.endTime, statusOverride);
-  const isLoggedIn = statusData ? statusData.isLoggedIn : true; // Assuming true if no statusData yet for simplicity
+  const isLoggedIn = statusData ? statusData.isLoggedIn : true;
+  const hasStatusData = !!statusData;
 
-  let btnText = "JOIN NOW";
-  let isDisabled = false;
+  let btnText = hasStatusData ? "JOIN MEET" : "...";
+  let isDisabled = !hasStatusData;
   let isPulsing = false;
+  let showRegisterOnClick = false;
 
-  if (currentStatus === "Ended") {
-    btnText = "EVENT ENDED";
-    isDisabled = true;
-  } else if (!isLoggedIn) {
-    btnText = "LOGIN TO JOIN";
-  } else if (!isRegistered) {
-    btnText = "REGISTER NOW";
-  } else if (currentStatus === "Upcoming") {
-    btnText = "REGISTERED"; 
-    isDisabled = true;
-  } else if (currentStatus === "Live" && !isLive) {
-    btnText = "WAITING FOR ORGANIZER...";
-    isDisabled = true;
-  } else if (currentStatus === "Live" && isLive) {
-    btnText = "JOIN MEET";
-    isPulsing = true;
+  if (hasStatusData) {
+    if (currentStatus === "Ended") {
+      btnText = "EVENT ENDED";
+      isDisabled = true;
+    } else if (!isLoggedIn) {
+      btnText = "LOGIN TO JOIN";
+    } else if (!isRegistered) {
+      btnText = "REGISTER NOW";
+      showRegisterOnClick = true;
+    } else if (currentStatus === "Upcoming") {
+      btnText = "REGISTERED";
+      isDisabled = true;
+    } else if (currentStatus === "Live" && !isLive) {
+      btnText = "WAITING FOR ORGANIZER...";
+      isDisabled = true;
+    } else if (currentStatus === "Live" && isLive) {
+      btnText = "JOIN MEET";
+      isPulsing = true;
+    }
   }
 
   return (
     <div className="event-card border-[#79f2a1]/40 shadow-[0_0_20px_rgba(121,242,161,0.1)]">
-      <button type="button" className="event-card__content block w-full text-left" onClick={onRegisterClick}>
+      <button type="button" className="event-card__content block w-full text-left" onClick={onCardClick}>
         <div className="event-card__topline">
           <span className="tag tag-green">SYSTEM LIVE</span>
           <span className="live-badge"><span /> LIVE</span>
@@ -313,7 +332,7 @@ function LiveEventCard({
       </button>
       <div className="event-card__footer mt-6">
         <Button
-          onClick={onJoin}
+          onClick={showRegisterOnClick ? onCardClick : onJoin}
           disabled={isDisabled}
           className={`w-full gap-2 font-black tracking-widest transition-all ${
             isPulsing ? "animate-pulse shadow-[0_0_15px_#79f2a1]" : ""
@@ -523,6 +542,7 @@ function EventPosterModal({
   event,
   isRegistered,
   isVitStudent,
+  savedProfile,
   eventStatuses,
   showRegister,
   onRegisterClick,
@@ -535,6 +555,7 @@ function EventPosterModal({
   event: SerializedEvent;
   isRegistered: boolean;
   isVitStudent: boolean;
+  savedProfile: SavedProfile | null;
   eventStatuses: Record<string, EventStatusData>;
   showRegister: boolean;
   onRegisterClick: () => void;
@@ -655,6 +676,7 @@ function EventPosterModal({
         eventId={event._id}
         eventTitle={event.title}
         isVitStudent={isVitStudent}
+        savedProfile={savedProfile}
         onSuccess={onRegisterSuccess}
       />
     </>
