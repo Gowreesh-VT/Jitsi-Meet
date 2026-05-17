@@ -100,6 +100,10 @@ export default async function EventDetailPage({ params }: PageProps) {
                 <Button className="w-full join-now-button" disabled>
                   EVENT ENDED
                 </Button>
+              ) : status === "Live" && !event.isLive ? (
+                <Button className="w-full join-now-button" disabled>
+                  WAITING FOR ORGANIZER...
+                </Button>
               ) : canJoin ? (
                 <Button asChild className="w-full join-now-button">
                   <a href={getMeetUrl(event.roomName)} target="_blank" rel="noreferrer">
@@ -108,7 +112,7 @@ export default async function EventDetailPage({ params }: PageProps) {
                 </Button>
               ) : (
                 <Button className="w-full join-now-button" disabled>
-                  JOIN MEET <ExternalLink className="h-4 w-4" />
+                  REGISTER TO JOIN <ExternalLink className="h-4 w-4" />
                 </Button>
               )}
               {!isRegistered && status === "Live" ? <p className="text-xs text-arcade-muted">Meet access appears after registration and only while the event is live.</p> : null}
