@@ -50,6 +50,8 @@ export async function PUT(request: Request, { params }: Params) {
     isPublished: typeof body.isPublished === "boolean" ? body.isPublished : undefined,
   };
 
+  Object.keys(update).forEach(key => update[key] === undefined && delete update[key]);
+
   if (update.roomName === "" || (!update.roomName && (body.domain || body.type || body.startTime))) {
     if (body.domain && body.type && body.startTime) {
        update.roomName = generateRoomName(body.domain, body.type, body.startTime);
