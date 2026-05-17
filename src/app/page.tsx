@@ -119,7 +119,7 @@ export default async function LandingPage() {
                 <div key={sponsor.name} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10">
                   <div className={`absolute inset-0 bg-linear-to-br ${sponsor.accent}`} />
                   <div className="relative flex min-h-44 flex-col items-center justify-between gap-4">
-                    <div className="flex h-24 w-full items-center justify-center rounded-xl bg-white/90 px-5 py-4 shadow-sm ring-1 ring-black/5 transition-transform duration-300 group-hover:scale-[1.02]">
+                    <div className="flex h-24 w-full items-center justify-center rounded-xl bg-transparent px-0 py-0 transition-transform duration-300 group-hover:scale-[1.02]">
                       <Image
                         src={sponsor.url}
                         alt={`${sponsor.name} logo`}
