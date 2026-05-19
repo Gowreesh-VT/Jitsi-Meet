@@ -410,6 +410,8 @@ export function RegisterDialog({
                       <FormControl>
                         <select {...field} className={fieldClassName}>
                           <option value="">Select grade</option>
+                          <option value="8th">8th</option>
+                          <option value="9th">9th</option>
                           <option value="10th">10th</option>
                           <option value="11th">11th</option>
                           <option value="12th">12th</option>
