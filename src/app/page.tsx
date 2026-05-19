@@ -184,26 +184,69 @@ export default async function LandingPage() {
               </p>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-6">
-              {[
-                { name: "Srijan", role: "President" },
-                { name: "Sudeep", role: "SECRETARY" },
-                { name: "Palak", role: "VICE-SECRETARY" }
-              ].map((organizer, i) => (
-                <div key={i} className="event-card max-w-70 group hover:border-[#ffafd5]/40 transition-all duration-300">
-                  <div className="event-card__content">
-                    <div className="event-card__topline">
-                      <span className="tag tag-primary">{organizer.role}</span>
+            <div className="relative w-full overflow-hidden py-4">
+              {/* Fade gradients on the sides for a professional look */}
+              <div className="absolute inset-y-0 left-0 w-20 bg-linear-to-r from-background via-background/80 to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-y-0 right-0 w-20 bg-linear-to-l from-background via-background/80 to-transparent z-10 pointer-events-none" />
+
+              <div className="flex animate-marquee">
+                <div className="flex gap-6 pr-6 shrink-0">
+                  {organizers.map((organizer, i) => (
+                    <div key={`copy1-${i}`} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10 w-60 shrink-0">
+                      <div className={`absolute inset-0 bg-linear-to-br ${organizer.accent}`} />
+                      <div className="relative flex flex-col items-center justify-between gap-6 min-h-60">
+                        <div className="flex h-32 w-full items-center justify-center rounded-xl bg-transparent">
+                          {organizer.url ? (
+                            <Image
+                              src={organizer.url}
+                              alt={`${organizer.name}`}
+                              width={128}
+                              height={128}
+                              className="h-32 w-32 object-contain bg-transparent transition-transform duration-300 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="flex h-28 w-28 items-center justify-center rounded-full border-2 border-[#ffafd5]/30 bg-white/10 text-3xl font-black tracking-wider text-[#ffafd5] shadow-[0_0_20px_rgba(249,77,180,0.2)] transition-transform duration-300 group-hover:scale-105">
+                              {organizer.name.slice(0, 2).toUpperCase()}
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <p className="text-base font-black tracking-[0.2em] text-white/90">{organizer.name.toUpperCase()}</p>
+                          <p className="mt-2 text-xs uppercase tracking-[0.25em] text-arcade-muted">{organizer.role}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex flex-col items-center gap-4 py-4">
-                       <div className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#ffafd5]/30 bg-white/10 text-2xl font-black tracking-wider text-[#ffafd5] shadow-[0_0_20px_rgba(249,77,180,0.2)] group-hover:scale-110 transition-transform duration-300">
-                         {organizer.name.slice(0, 2).toUpperCase()}
-                       </div>
-                       <span className="event-card__title text-center group-hover:text-[#ffafd5] transition-colors">{organizer.name.toUpperCase()}</span>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
+                <div className="flex gap-6 pr-6 shrink-0" aria-hidden="true">
+                  {organizers.map((organizer, i) => (
+                    <div key={`copy2-${i}`} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10 w-60 shrink-0">
+                      <div className={`absolute inset-0 bg-linear-to-br ${organizer.accent}`} />
+                      <div className="relative flex flex-col items-center justify-between gap-6 min-h-60">
+                        <div className="flex h-32 w-full items-center justify-center rounded-xl bg-transparent">
+                          {organizer.url ? (
+                            <Image
+                              src={organizer.url}
+                              alt={`${organizer.name}`}
+                              width={128}
+                              height={128}
+                              className="h-32 w-32 object-contain bg-transparent transition-transform duration-300 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="flex h-28 w-28 items-center justify-center rounded-full border-2 border-[#ffafd5]/30 bg-white/10 text-3xl font-black tracking-wider text-[#ffafd5] shadow-[0_0_20px_rgba(249,77,180,0.2)] transition-transform duration-300 group-hover:scale-105">
+                              {organizer.name.slice(0, 2).toUpperCase()}
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <p className="text-base font-black tracking-[0.2em] text-white/90">{organizer.name.toUpperCase()}</p>
+                          <p className="mt-2 text-xs uppercase tracking-[0.25em] text-arcade-muted">{organizer.role}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -264,6 +307,140 @@ export default async function LandingPage() {
     </div>
   );
 }
+
+const organizers = [
+  {
+    name: "Srijan",
+    role: "President",
+    url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEv3e6MOhWmy6tpuiexQX81z0fGaEJbT52MDPl",
+    accent: "from-pink-500/20 via-pink-500/5 to-transparent",
+  },
+  {
+    name: "Sudeep",
+    role: "SECRETARY",
+    accent: "from-blue-500/20 via-blue-500/5 to-transparent",
+  },
+  {
+    name: "Palak",
+    role: "VICE-SECRETARY",
+    accent: "from-yellow-500/20 via-yellow-500/5 to-transparent",
+  },
+  {
+    name: "Abhinav",
+    role: "TECHNICAL HEAD",
+    accent: "from-green-500/20 via-green-500/5 to-transparent",
+  },
+  {
+    name: "Rohan",
+    role: "DESIGN HEAD",
+    accent: "from-purple-500/20 via-purple-500/5 to-transparent",
+  },
+  {
+    name: "Ishita",
+    role: "MANAGEMENT HEAD",
+    accent: "from-red-500/20 via-red-500/5 to-transparent",
+  },
+  {
+    name: "Aditya",
+    role: "WEB DEVELOPER",
+    accent: "from-cyan-500/20 via-cyan-500/5 to-transparent",
+  },
+  {
+    name: "Sneha",
+    role: "PR HEAD",
+    accent: "from-pink-500/20 via-pink-500/5 to-transparent",
+  },
+  {
+    name: "Ananya",
+    role: "MARKETING HEAD",
+    accent: "from-yellow-500/20 via-yellow-500/5 to-transparent",
+  },
+  {
+    name: "Karan",
+    role: "EVENT COORDINATOR",
+    accent: "from-blue-500/20 via-blue-500/5 to-transparent",
+  },
+  {
+    name: "Meera",
+    role: "RESEARCH LEAD",
+    accent: "from-emerald-500/20 via-emerald-500/5 to-transparent",
+  },
+  {
+    name: "Varun",
+    role: "EDITORIAL HEAD",
+    accent: "from-orange-500/20 via-orange-500/5 to-transparent",
+  },
+  {
+    name: "Tanya",
+    role: "OPERATIONS LEAD",
+    accent: "from-indigo-500/20 via-indigo-500/5 to-transparent",
+  },
+  {
+    name: "Rishi",
+    role: "SPONSORSHIP HEAD",
+    accent: "from-teal-500/20 via-teal-500/5 to-transparent",
+  },
+  {
+    name: "Nikhil",
+    role: "APP DEVELOPER",
+    accent: "from-violet-500/20 via-violet-500/5 to-transparent",
+  },
+  {
+    name: "Divya",
+    role: "SOCIAL MEDIA LEAD",
+    accent: "from-fuchsia-500/20 via-fuchsia-500/5 to-transparent",
+  },
+  {
+    name: "Rahul",
+    role: "FINANCE LEAD",
+    accent: "from-amber-500/20 via-amber-500/5 to-transparent",
+  },
+  {
+    name: "Neha",
+    role: "COMMUNITY LEAD",
+    accent: "from-rose-500/20 via-rose-500/5 to-transparent",
+  },
+  {
+    name: "Vikram",
+    role: "CYBERSEC LEAD",
+    accent: "from-lime-500/20 via-lime-500/5 to-transparent",
+  },
+  {
+    name: "Kriti",
+    role: "CONTENT WRITER",
+    accent: "from-sky-500/20 via-sky-500/5 to-transparent",
+  },
+  {
+    name: "Arjun",
+    role: "VIDEO EDITOR",
+    accent: "from-red-500/20 via-red-500/5 to-transparent",
+  },
+  {
+    name: "Riya",
+    role: "GRAPHIC DESIGNER",
+    accent: "from-purple-500/20 via-purple-500/5 to-transparent",
+  },
+  {
+    name: "Manish",
+    role: "LOGISTICS HEAD",
+    accent: "from-teal-500/20 via-teal-500/5 to-transparent",
+  },
+  {
+    name: "Simran",
+    role: "OUTREACH LEAD",
+    accent: "from-pink-500/20 via-pink-500/5 to-transparent",
+  },
+  {
+    name: "Yash",
+    role: "AI/ML RESEARCHER",
+    accent: "from-cyan-500/20 via-cyan-500/5 to-transparent",
+  },
+  {
+    name: "Pooja",
+    role: "ALUMNI COORDINATOR",
+    accent: "from-yellow-500/20 via-yellow-500/5 to-transparent",
+  }
+];
 
 type FaqItem = {
   question: string;

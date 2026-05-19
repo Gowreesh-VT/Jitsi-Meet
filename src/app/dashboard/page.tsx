@@ -42,7 +42,7 @@ export default async function DashboardPage() {
           <div className="event-card mx-auto max-w-2xl py-12 text-center">
             <h2 className="event-card__title mb-4">NO REGISTRATIONS</h2>
             <p className="mb-6 text-arcade-muted">Register for an upcoming session to see it here.</p>
-            <Button asChild className="arcade-btn"><Link href="/schedule">BROWSE EVENTS</Link></Button>
+            <Button asChild className="arcade-btn"><Link href="/#schedule">BROWSE EVENTS</Link></Button>
           </div>
         ) : (
           <div className="space-y-12">
