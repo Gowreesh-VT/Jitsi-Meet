@@ -33,7 +33,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en" suppressHydrationWarning className={cn("dark h-full antialiased scroll-smooth", "font-sans", jetbrainsMono.variable, pressStart.variable)}>
+    <html lang="en" suppressHydrationWarning className={cn("dark h-full antialiased scroll-smooth scroll-pt-24", "font-sans", jetbrainsMono.variable, pressStart.variable)}>
       <body className="flex min-h-screen flex-col bg-background text-foreground">
         <Providers session={session}>
           <Navbar />

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { Calendar, ExternalLink, Video, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -554,7 +555,9 @@ function EventPosterModal({
     if (e.target === e.currentTarget) onClose();
   }
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <>
       {!showRegister ? (
         <div className="dialog-overlay" onClick={handleBackdropClick} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -660,7 +663,8 @@ function EventPosterModal({
         savedProfile={savedProfile}
         onSuccess={onRegisterSuccess}
       />
-    </>
+    </>,
+    document.body
   );
 }
 
