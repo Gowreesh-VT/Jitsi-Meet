@@ -3,12 +3,10 @@ import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongodb";
 import { generateRoomName, serializeEvent } from "@/lib/events";
-import { ensureSeedEvents } from "@/lib/seed";
 import Event from "@/models/Event";
 
 export async function GET(request: Request) {
   await connectToDatabase();
-  await ensureSeedEvents();
 
   const { searchParams } = new URL(request.url);
   const includeUnpublished = searchParams.get("includeUnpublished") === "true";
