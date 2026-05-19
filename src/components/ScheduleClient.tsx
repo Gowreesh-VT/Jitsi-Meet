@@ -558,7 +558,7 @@ function EventPosterModal({
     <>
       {!showRegister ? (
         <div className="dialog-overlay" onClick={handleBackdropClick} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div className="modal-panel" style={{ width: "min(640px, calc(100vw - 32px))", maxHeight: "min(88vh, 780px)", overflowY: "auto", borderColor: colors.border, position: "relative", boxShadow: `0 24px 80px rgba(0,0,0,0.55), 0 0 60px ${colors.glow}` }}>
+          <div className="modal-panel" style={{ width: "min(520px, calc(100vw - 32px))", maxHeight: "min(82vh, 640px)", overflowY: "auto", borderColor: colors.border, position: "relative", boxShadow: `0 24px 80px rgba(0,0,0,0.55), 0 0 60px ${colors.glow}` }}>
             <button onClick={onClose} className="modal-close" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "var(--arcade-muted)", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", justifyContent: "center" }} aria-label="Close modal">
               <X size={18} />
             </button>

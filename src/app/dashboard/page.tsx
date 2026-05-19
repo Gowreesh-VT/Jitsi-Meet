@@ -35,6 +35,7 @@ export default async function DashboardPage() {
       <main className="main-shell relative z-10 py-12">
         <section className="hero mb-12">
           <h1 className="text-4xl font-black tracking-widest text-[#ffafd5]">MY EVENTS</h1>
+          <p>Manage and View all the events that you have registered for.</p>
           <div className="hero-rule mt-6" />
         </section>
         {events.length === 0 ? (

@@ -63,19 +63,19 @@ export default async function LandingPage() {
           
           <div className="hero-rule mb-8" />
 
-          <p className="max-w-2xl text-lg mb-10 leading-relaxed text-arcade-muted">
+          <p className="max-w-2xl text-lg leading-relaxed text-arcade-muted">
             Experience the future of tech empowerment. The Microsoft Innovations Club 
             Meet Portal brings together high-impact technical workshops and 
             elite hackathons in one unified retro-futuristic space.
           </p>
-
-
+          
+          <div className="hero-rule mb-24" />
           
           {nextEvent && (() => {
             const eventWindow = formatEventWindow(nextEvent.startTime, nextEvent.endTime);
 
             return (
-              <div className="mb-16 w-full max-w-4xl">
+              <div className="mb-12 w-full max-w-4xl">
                 <div className="relative overflow-hidden border border-[#79f2a1]/30 bg-black/45 p-5 shadow-[0_0_42px_rgba(121,242,161,0.12)] backdrop-blur-xl sm:p-7">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(121,242,161,0.14),transparent_45%)]" />
                   <div className="relative flex flex-col gap-6 lg:grid-cols-[1fr_280px] lg:items-center">
@@ -99,6 +99,9 @@ export default async function LandingPage() {
 
         {/* Schedule Section */}
         <div id="schedule" className="event-section w-full mt-16 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
+          <div className="mb-10 flex flex-col gap-3 text-center">
+            <h2 className="section-title">SCHEDULE</h2>
+          </div>
           {scheduledEvents.length === 0 ? (
             <div className="event-card max-w-2xl mx-auto text-center py-12">
               <h3 className="event-card__title mb-4">NO DATA DETECTED</h3>
@@ -172,7 +175,7 @@ export default async function LandingPage() {
         </div>
 
         {/* Organizers Section */}
-        <div id="organizers" className="event-section w-full animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
+        <div id="organizers" className="event-section mt-24! w-full animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
           <div className="mx-auto max-w-5xl rounded-4xl border border-white/10 bg-black/25 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-md sm:p-8">
             <div className="mb-8 flex flex-col gap-3 text-center">
               <h2 className="section-title">ORGANIZERS</h2>
@@ -205,7 +208,7 @@ export default async function LandingPage() {
           </div>
         </div>
         {/* FAQ Section */}
-        <section className="event-section faq-section w-full max-w-5xl mt-24" id="faq">
+        <section className="event-section faq-section w-full max-w-5xl mt-24" id="faqs">
           <h2 className="section-title text-primary glow-title mb-8 text-center">FAQ</h2>
           <Accordion className="faq-list w-full" collapsible type="single">
             {faqs.map((faq, index) => (
