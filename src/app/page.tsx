@@ -460,7 +460,7 @@ const faqs: FaqItem[] = [
   {
     question: "How will the online workshop be conducted?",
     answer:
-      "The sessions are hosted live on Google Meet (we may also Microsoft Teams for specific tracks). A join link is emailed to you after you register.",
+      "The sessions are hosted live on our platform. A join link is enabled in the website when the session starts.",
     accent: "blue",
   },
   {
@@ -502,7 +502,7 @@ const faqs: FaqItem[] = [
   {
     question: "How can I ask questions if I get stuck on a coding error?",
     answer:
-      "We run a dedicated Discord (and WhatsApp) group for participants. Mentors monitor the chat during live sessions so you can get unstuck quickly.",
+      "We run a dedicated WhatsApp group for participants. Mentors monitor the chat during live sessions so you can get unstuck quickly.",
     accent: "yellow",
   },
   {
