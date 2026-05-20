@@ -58,8 +58,9 @@ export async function POST(request: Request) {
   await connectToDatabase();
   const event = await Event.findOne({ _id: eventId, isPublished: true });
   if (!event) return NextResponse.json({ message: "Event not found" }, { status: 404 });
-  if (getStatus(event.startTime, event.endTime, event.statusOverride) !== "Upcoming") {
-    return NextResponse.json({ message: "Registration is only open before the event starts" }, { status: 400 });
+  const currentStatus = getStatus(event.startTime, event.endTime, event.statusOverride);
+  if (currentStatus !== "Upcoming" && currentStatus !== "Live") {
+    return NextResponse.json({ message: "Registration is only open before or during the event" }, { status: 400 });
   }
 
   try {
