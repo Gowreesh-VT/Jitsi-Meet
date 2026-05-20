@@ -82,9 +82,13 @@ export default async function EventDetailPage({ params }: PageProps) {
               <p className="flex items-center gap-3 text-sm text-arcade-muted"><Clock className="h-4 w-4" />{time}</p>
               <p className="flex items-center gap-3 text-sm text-arcade-muted"><Timer className="h-4 w-4" />{durationMinutes} minutes</p>
 
-              {status === "Upcoming" ? (
+              {status === "Ended" ? (
+                <Button className="w-full join-now-button" disabled>
+                  EVENT ENDED
+                </Button>
+              ) : !isRegistered ? (
                 session?.user.id ? (
-                  <RegisterDialogLauncher event={event} isRegistered={isRegistered} isVitStudent={isVitStudentEmail(session.user.email)} />
+                  <RegisterDialogLauncher event={event} isRegistered={isRegistered} isVitStudent={isVitStudentEmail(session?.user?.email)} />
                 ) : (
                   <Button asChild className="w-full arcade-btn">
                     <Link href="/login">
@@ -93,23 +97,17 @@ export default async function EventDetailPage({ params }: PageProps) {
                     </Link>
                   </Button>
                 )
-              ) : status === "Ended" ? (
-                <Button className="w-full join-now-button" disabled>
-                  EVENT ENDED
-                </Button>
-              ) : status === "Live" && !event.isLive ? (
+              ) : status === "Upcoming" ? (
+                <RegisterDialogLauncher event={event} isRegistered={isRegistered} isVitStudent={isVitStudentEmail(session?.user?.email)} />
+              ) : !event.isLive ? (
                 <Button className="w-full join-now-button" disabled>
                   WAITING FOR ORGANIZER...
                 </Button>
-              ) : canJoin ? (
+              ) : (
                 <Button asChild className="w-full join-now-button">
                   <a href={getMeetUrl(event.roomName)} target="_blank" rel="noreferrer">
                     JOIN MEET <ExternalLink className="h-4 w-4" />
                   </a>
-                </Button>
-              ) : (
-                <Button className="w-full join-now-button" disabled>
-                  REGISTER TO JOIN <ExternalLink className="h-4 w-4" />
                 </Button>
               )}
               {!isRegistered && status === "Live" ? <p className="text-xs text-arcade-muted">Meet access appears after registration and only while the event is live.</p> : null}

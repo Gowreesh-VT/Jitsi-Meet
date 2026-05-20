@@ -18,8 +18,8 @@ const pressStart = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "Microsoft Innovations Club Meet Portal",
-  description: "Manage and join Microsoft Innovations Club Jitsi Meet sessions.",
+  title: "Microcraft By Microsoft Innovations Club",
+  description: "Experience the future of tech empowerment with Microcraft by Microsoft Innovations Club.",
 };
 
 import { getServerSession } from "next-auth/next";

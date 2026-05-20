@@ -47,18 +47,26 @@ export default async function LandingPage() {
       {/* Floating Retro Icons (Decorative) */}
       <div className="main-shell flex flex-col items-center justify-center pt-20">
         <div className="hero animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div className="hero-logo mb-6">
+          <div className="hero-logo">
             <Image 
               src="/mic-logo.png" 
               alt="MIC Logo" 
               width={100} 
               height={80} 
-              className="object-contain"
+
             />
           </div>
           
-          <h1 className="mb-4">
-            MICROCRAFT
+          <h1 className="mb-4 flex justify-center">
+            <span className="sr-only">MICROCRAFT</span>
+            <Image 
+              src="https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKE1rbRSNtyNxaf5Isz24Y7uKnHvUEWjGwQ8So3" 
+              alt="MICROCRAFT" 
+              width={600} 
+              height={180} 
+              className="object-contain max-w-full h-auto drop-shadow-[0_0_24px_rgba(249,77,180,0.52)]"
+              priority
+            />
           </h1>
           
           <div className="hero-rule mb-8" />
@@ -281,7 +289,7 @@ export default async function LandingPage() {
               <ul className="space-y-3 text-sm font-bold text-arcade-muted">
                 <li><Link href="/login" className="hover:text-primary transition-colors">Login</Link></li>
                 <li><Link href="/#schedule" className="hover:text-primary transition-colors">Schedule</Link></li>
-                <li><Link href="https://meet.microsoftinnovations.club" className="hover:text-primary transition-colors">Microsoft Innovations Meet</Link></li>
+                <li><Link href="https://www.microsoftinnovations.club" className="hover:text-primary transition-colors">Microsoft Innovations Meet</Link></li>
               </ul>
             </div>
             <div>
@@ -293,7 +301,7 @@ export default async function LandingPage() {
                 <Link href="https://linkedin.com/company/mic-vitc" target="_blank" className="h-10 w-10 bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-blue-400 transition-all">
                     <svg width="800px" height="800px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none"><path fill="#0A66C2" d="M12.225 12.225h-1.778V9.44c0-.664-.012-1.519-.925-1.519-.926 0-1.068.724-1.068 1.47v2.834H6.676V6.498h1.707v.783h.024c.348-.594.996-.95 1.684-.925 1.802 0 2.135 1.185 2.135 2.728l-.001 3.14zM4.67 5.715a1.037 1.037 0 01-1.032-1.031c0-.566.466-1.032 1.032-1.032.566 0 1.031.466 1.032 1.032 0 .566-.466 1.032-1.032 1.032zm.889 6.51h-1.78V6.498h1.78v5.727zM13.11 2H2.885A.88.88 0 002 2.866v10.268a.88.88 0 00.885.866h10.226a.882.882 0 00.889-.866V2.865a.88.88 0 00-.889-.864z"/></svg>
                 </Link>
-                <Link href="https://chat.whatsapp.com/..." target="_blank" className="h-10 w-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-white/10 hover:text-green-400 transition-all">
+                <Link href="https://chat.whatsapp.com/G5wLlrN7DMeDIh8pSFOSfu?mode=gi_t" target="_blank" className="h-10 w-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-white/10 hover:text-green-400 transition-all">
                   <Image src="/whatsapp.svg" alt="WhatsApp" width={20} height={20} className="h-5 w-5" />
                 </Link>
               </div>
