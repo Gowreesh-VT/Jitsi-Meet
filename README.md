@@ -73,6 +73,37 @@ npm run start    # Start production server
 npm run lint     # Run ESLint
 ```
 
+## App Routes
+
+- `/` Landing page with schedule and sponsors.
+- `/events/[id]` Event detail and join flow.
+- `/dashboard` Member dashboard (requires sign-in).
+- `/admin` Admin panel (requires admin role).
+- `/login` Custom sign-in screen.
+
+## API Routes
+
+- `GET /api/events` List published events.
+- `GET /api/events?includeUnpublished=true` (admin) List all events.
+- `POST /api/events` (admin) Create an event.
+- `GET /api/events/:id` Fetch event details.
+- `PUT /api/events/:id` (admin) Update an event.
+- `DELETE /api/events/:id` (admin) Delete an event.
+- `GET /api/events/:id/status` Get live status and registration flags.
+- `POST /api/events/:id/meet/join` Log a join action.
+- `POST /api/events/:id/meet/leave` Log a leave action.
+- `POST /api/registrations` Register for an event.
+- `GET /api/registrations/:eventId` View registrations (admin or current user).
+- `GET /api/user/profile` Pull saved profile data from last registration.
+- `POST /api/admin/promote` (admin) Promote a user to admin role.
+- `GET|POST /api/auth/[...nextauth]` NextAuth handlers.
+
+## Data Model (MongoDB)
+
+- `User` - Google-authenticated users with `role` (`user` or `admin`).
+- `Event` - Schedule items with domain, type, room name, and publish/live state.
+- `Registration` - Per-user registration info and meet attendance history.
+
 ## Admin Bootstrapping
 
 New users start with `user` role. To create the first admin:
