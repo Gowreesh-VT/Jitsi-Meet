@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { isValidObjectId } from "mongoose";
@@ -54,7 +55,6 @@ export default async function EventDetailPage({ params }: PageProps) {
   const isRegistered = session?.user.id
     ? Boolean(await Registration.exists({ eventId: event._id, userId: session.user.id }))
     : false;
-  const canJoin = isRegistered && status === "Live";
 
   return (
     <div className="schedule-retro relative min-h-screen">
@@ -65,6 +65,18 @@ export default async function EventDetailPage({ params }: PageProps) {
         <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
           <div className="event-card">
             <div className="event-card__content">
+              <div className="mb-6 overflow-hidden rounded-xl border border-white/10" style={{ background: "linear-gradient(135deg, rgba(18,19,27,0.95) 0%, rgba(255,255,255,0.05) 100%)", position: "relative", aspectRatio: "16 / 7" }}>
+                {event.posterUrl ? (
+                  <Image
+                    src={event.posterUrl}
+                    alt={`${event.title} poster`}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    sizes="(max-width: 1024px) 100vw, 640px"
+                  />
+                ) : null}
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%)" }} />
+              </div>
               <div className="event-card__topline">
                 <span className="tag tag-primary">{event.domain}</span>
                 <Badge variant={status === "Live" ? "success" : status === "Ended" ? "muted" : "secondary"}>{status}</Badge>

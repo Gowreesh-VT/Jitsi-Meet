@@ -15,6 +15,7 @@ type EventFormState = {
   startTime: string;
   endTime: string;
   roomName: string;
+  posterUrl: string;
   statusOverride: "auto" | "live" | "ended";
   isPublished: boolean;
 };
@@ -29,6 +30,7 @@ function getInitialForm(event?: SerializedEvent | null): EventFormState {
       startTime: toLocalDatetime(event.startTime),
       endTime: toLocalDatetime(event.endTime),
       roomName: event.roomName,
+      posterUrl: event.posterUrl ?? "",
       statusOverride: event.statusOverride,
       isPublished: event.isPublished,
     };
@@ -42,6 +44,7 @@ function getInitialForm(event?: SerializedEvent | null): EventFormState {
     startTime: "",
     endTime: "",
     roomName: "",
+    posterUrl: "",
     statusOverride: "auto",
     isPublished: false,
   };
@@ -55,6 +58,7 @@ const emptyForm: EventFormState = {
   startTime: "",
   endTime: "",
   roomName: "",
+  posterUrl: "",
   statusOverride: "auto",
   isPublished: false,
 };
@@ -147,6 +151,15 @@ export function AdminEventForm({
       <div className="grid gap-2">
         <Label htmlFor="roomName">Jitsi room name</Label>
         <Input id="roomName" required value={form.roomName} onChange={(e) => setForm({ ...form, roomName: e.target.value })} />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="posterUrl">Poster image URL</Label>
+        <Input
+          id="posterUrl"
+          placeholder="https://..."
+          value={form.posterUrl}
+          onChange={(e) => setForm({ ...form, posterUrl: e.target.value })}
+        />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="statusOverride">Manual status</Label>

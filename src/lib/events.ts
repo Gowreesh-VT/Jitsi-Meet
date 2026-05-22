@@ -76,7 +76,7 @@ export function serializeEvent(event: {
   isLive: boolean;
   isPublished: boolean;
   createdAt?: Date;
-  posterUrl?: string;
+  posterUrl?: string | null;
 }): SerializedEvent {
   return {
     _id: String(event._id),
@@ -91,7 +91,7 @@ export function serializeEvent(event: {
     isLive: event.isLive,
     isPublished: event.isPublished,
     createdAt: event.createdAt?.toISOString(),
-    posterUrl: event.posterUrl,
+    posterUrl: event.posterUrl ?? undefined,
   };
 }
 
