@@ -561,95 +561,108 @@ function EventPosterModal({
     <>
       {!showRegister ? (
         <div className="dialog-overlay" onClick={handleBackdropClick} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div className="modal-panel" style={{ width: "min(520px, calc(100vw - 32px))", maxHeight: "min(82vh, 640px)", overflowY: "auto", borderColor: colors.border, position: "relative", boxShadow: `0 24px 80px rgba(0,0,0,0.55), 0 0 60px ${colors.glow}` }}>
+          <div className="modal-panel" style={{ width: "min(920px, calc(100vw - 32px))", maxHeight: "min(86vh, 760px)", overflowY: "auto", borderColor: colors.border, position: "relative", boxShadow: `0 24px 80px rgba(0,0,0,0.55), 0 0 60px ${colors.glow}` }}>
             <button onClick={onClose} className="modal-close" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "var(--arcade-muted)", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", justifyContent: "center" }} aria-label="Close modal">
               <X size={18} />
             </button>
-            <div style={{ width: "100%", aspectRatio: "16/7", background: `linear-gradient(135deg, rgba(18,19,27,0.9) 0%, ${colors.glow.replace("0.18", "0.35")} 100%)`, border: `1px solid ${colors.border}30`, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "16px", marginBottom: "20px", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", inset: 0, backgroundImage: `linear-gradient(${colors.border}18 1px, transparent 1px), linear-gradient(90deg, ${colors.border}18 1px, transparent 1px)`, backgroundSize: "32px 32px" }} />
-              <SymbolIcon name={domainMeta[event.domain].icon} className={colors.text} style={{ width: "4rem", height: "4rem", opacity: 0.85, position: "relative", zIndex: 1 }} />
-              <span style={{ position: "relative", zIndex: 1, background: colors.border, color: domainMeta[event.domain].accent === "yellow" ? "#1a0e00" : "white", fontSize: "0.68rem", fontWeight: 800, padding: "5px 14px", textTransform: "uppercase", letterSpacing: "0.12em" }}>
-                {event.type === "hackathon" ? "Hackathon" : "Workshop"}
-              </span>
-            </div>
-            <div className="dialog-header">
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-                <span className={`tag ${colors.tag}`} style={{ fontSize: "0.7rem", fontWeight: 800, padding: "4px 10px", border: "1px solid currentColor", textTransform: "uppercase" }}>{domainMeta[event.domain].label}</span>
-                <span style={{ color: "var(--arcade-muted)", fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.12em" }}>{status}</span>
+            <div className="flex flex-col gap-6 md:flex-row md:gap-8">
+              <div className="w-full md:w-[44%]">
+                <div className="overflow-hidden rounded-xl border" style={{ borderColor: `${colors.border}30`, background: "rgba(8, 10, 18, 0.8)" }}>
+                  {event.posterUrl ? (
+                    <img
+                      src={event.posterUrl}
+                      alt={`${event.title} poster`}
+                      style={{ width: "100%", height: "auto", display: "block" }}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="flex h-[220px] items-center justify-center text-xs font-bold uppercase tracking-[0.2em] text-arcade-muted">
+                      Poster unavailable
+                    </div>
+                  )}
+                </div>
               </div>
-              <h2 className={`dialog-title ${colors.text}`} style={{ fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.04em" }}>{event.title}</h2>
-              <p className="dialog-description" style={{ fontSize: "1rem", lineHeight: 1.65 }}>{event.description}</p>
-              <div style={{ marginTop: "12px", fontSize: "0.95rem", lineHeight: 1.6, color: "var(--arcade-muted)" }}>
-                <p style={{ display: "flex", alignItems: "center", gap: "8px" }}><Calendar className="h-4 w-4" /> {date}</p>
-                <p style={{ display: "flex", alignItems: "center", gap: "8px" }}><Video className="h-4 w-4" /> {time}</p>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <div className="dialog-header">
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                    <span className={`tag ${colors.tag}`} style={{ fontSize: "0.7rem", fontWeight: 800, padding: "4px 10px", border: "1px solid currentColor", textTransform: "uppercase" }}>{domainMeta[event.domain].label}</span>
+                    <span style={{ color: "var(--arcade-muted)", fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.12em" }}>{status}</span>
+                  </div>
+                  <h2 className={`dialog-title ${colors.text}`} style={{ fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.04em" }}>{event.title}</h2>
+                  <p className="dialog-description" style={{ fontSize: "1rem", lineHeight: 1.65 }}>{event.description}</p>
+                  <div style={{ marginTop: "12px", fontSize: "0.95rem", lineHeight: 1.6, color: "var(--arcade-muted)" }}>
+                    <p style={{ display: "flex", alignItems: "center", gap: "8px" }}><Calendar className="h-4 w-4" /> {date}</p>
+                    <p style={{ display: "flex", alignItems: "center", gap: "8px" }}><Video className="h-4 w-4" /> {time}</p>
+                  </div>
+                </div>
+                <div className="modal-actions mt-6" style={{ justifyContent: "stretch", flexDirection: "column" }}>
+                  {(() => {
+                    const statusData = eventStatuses[event._id];
+                    const isRegisteredLocal = statusData?.isRegistered ?? isRegistered;
+                    const isLive = statusData?.isLive ?? event.isLive;
+                    const statusOverride = statusData?.statusOverride ?? event.statusOverride;
+                    const currentStatus = getStatus(event.startTime, event.endTime, statusOverride);
+                    const isUserLoggedIn = statusData ? statusData.isLoggedIn : isLoggedIn;
+
+                    let btnText = "JOIN MEETING";
+                    let isDisabled = false;
+                    let isPulsing = false;
+                    let btnColor = colors.border;
+                    let textColor = domainMeta[event.domain].accent === "yellow" ? "#1a0e00" : "white";
+
+                    if (currentStatus === "Ended") {
+                      btnText = "EVENT ENDED";
+                      isDisabled = true;
+                      btnColor = "#ea4335";
+                    } else if (!isUserLoggedIn) {
+                      btnText = "LOGIN TO JOIN";
+                    } else if (!isRegisteredLocal) {
+                      btnText = "REGISTER NOW";
+                      btnColor = "#fbbc04";
+                      textColor = "#1a0e00";
+                    } else if (currentStatus === "Upcoming") {
+                      btnText = `REGISTERED`;
+                      isDisabled = true;
+                    } else if (currentStatus === "Live" && !isLive) {
+                      btnText = "WAITING FOR ORGANIZER...";
+                      isDisabled = true;
+                      btnColor = "#666";
+                    } else if (currentStatus === "Live" && isLive) {
+                      btnText = "JOIN MEET";
+                      isPulsing = true;
+                      btnColor = "#79f2a1";
+                      textColor = "#000";
+                    }
+
+                    return (
+                      <Button 
+                        className={`h-12 w-full gap-2 font-black tracking-widest ${isPulsing ? "animate-pulse shadow-[0_0_20px_#79f2a1]" : ""}`}
+                        disabled={isDisabled} 
+                        style={{ background: btnColor, color: textColor, border: "none", fontSize: "0.9rem" }} 
+                        onClick={btnText === "REGISTER NOW" ? onRegisterClick : () => onJoin(event)}
+                      >
+                        {btnText === "REGISTERED" && currentStatus === "Upcoming" ? (
+                          <div className="flex flex-col items-center">
+                            <span className="text-[10px] opacity-70">REGISTERED - STARTS IN</span>
+                            <CountdownTimer target={event.startTime} compact />
+                          </div>
+                        ) : btnText === "STARTS IN COUNTDOWN" ? (
+                          <div className="flex flex-col items-center">
+                            <span className="text-[10px] opacity-70">TRANSMISSION PENDING</span>
+                            <CountdownTimer target={event.startTime} compact />
+                          </div>
+                        ) : (
+                          <>
+                            {btnText === "JOIN MEET" || btnText === "JOIN MEETING" || btnText === "LOGIN TO JOIN" ? <ExternalLink className="h-4 w-4" /> : null}
+                            {btnText}
+                          </>
+                        )}
+                      </Button>
+                    );
+                  })()}
+                  <Button variant="outline" className="h-10 w-full font-black tracking-widest" style={{ borderColor: "rgba(255,255,255,0.12)", color: "var(--arcade-muted)", background: "transparent" }} onClick={onClose}>CLOSE</Button>
+                </div>
               </div>
-            </div>
-            <div className="modal-actions" style={{ justifyContent: "stretch", flexDirection: "column" }}>
-              {(() => {
-                const statusData = eventStatuses[event._id];
-                const isRegisteredLocal = statusData?.isRegistered ?? isRegistered;
-                const isLive = statusData?.isLive ?? event.isLive;
-                const statusOverride = statusData?.statusOverride ?? event.statusOverride;
-                const currentStatus = getStatus(event.startTime, event.endTime, statusOverride);
-                const isUserLoggedIn = statusData ? statusData.isLoggedIn : isLoggedIn;
-
-                let btnText = "JOIN MEETING";
-                let isDisabled = false;
-                let isPulsing = false;
-                let btnColor = colors.border;
-                let textColor = domainMeta[event.domain].accent === "yellow" ? "#1a0e00" : "white";
-
-                if (currentStatus === "Ended") {
-                  btnText = "EVENT ENDED";
-                  isDisabled = true;
-                  btnColor = "#ea4335";
-                } else if (!isUserLoggedIn) {
-                  btnText = "LOGIN TO JOIN";
-                } else if (!isRegisteredLocal) {
-                  btnText = "REGISTER NOW";
-                  btnColor = "#fbbc04";
-                  textColor = "#1a0e00";
-                } else if (currentStatus === "Upcoming") {
-                  btnText = `REGISTERED`;
-                  isDisabled = true;
-                } else if (currentStatus === "Live" && !isLive) {
-                  btnText = "WAITING FOR ORGANIZER...";
-                  isDisabled = true;
-                  btnColor = "#666";
-                } else if (currentStatus === "Live" && isLive) {
-                  btnText = "JOIN MEET";
-                  isPulsing = true;
-                  btnColor = "#79f2a1";
-                  textColor = "#000";
-                }
-
-                return (
-                  <Button 
-                    className={`h-12 w-full gap-2 font-black tracking-widest ${isPulsing ? "animate-pulse shadow-[0_0_20px_#79f2a1]" : ""}`}
-                    disabled={isDisabled} 
-                    style={{ background: btnColor, color: textColor, border: "none", fontSize: "0.9rem" }} 
-                    onClick={btnText === "REGISTER NOW" ? onRegisterClick : () => onJoin(event)}
-                  >
-                    {btnText === "REGISTERED" && currentStatus === "Upcoming" ? (
-                      <div className="flex flex-col items-center">
-                        <span className="text-[10px] opacity-70">REGISTERED - STARTS IN</span>
-                        <CountdownTimer target={event.startTime} compact />
-                      </div>
-                    ) : btnText === "STARTS IN COUNTDOWN" ? (
-                      <div className="flex flex-col items-center">
-                        <span className="text-[10px] opacity-70">TRANSMISSION PENDING</span>
-                        <CountdownTimer target={event.startTime} compact />
-                      </div>
-                    ) : (
-                      <>
-                        {btnText === "JOIN MEET" || btnText === "JOIN MEETING" || btnText === "LOGIN TO JOIN" ? <ExternalLink className="h-4 w-4" /> : null}
-                        {btnText}
-                      </>
-                    )}
-                  </Button>
-                );
-              })()}
-              <Button variant="outline" className="h-10 w-full font-black tracking-widest" style={{ borderColor: "rgba(255,255,255,0.12)", color: "var(--arcade-muted)", background: "transparent" }} onClick={onClose}>CLOSE</Button>
             </div>
           </div>
         </div>
