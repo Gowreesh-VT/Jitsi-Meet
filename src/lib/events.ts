@@ -14,6 +14,7 @@ export type SerializedEvent = {
   startTime: string;
   endTime: string;
   roomName: string;
+  posterUrl?: string;
   statusOverride: "auto" | "live" | "ended";
   isLive: boolean;
   isPublished: boolean;
@@ -71,6 +72,7 @@ export function serializeEvent(event: {
   startTime: Date;
   endTime: Date;
   roomName: string;
+  posterUrl?: string | null;
   statusOverride?: "auto" | "live" | "ended";
   isLive: boolean;
   isPublished: boolean;
@@ -85,6 +87,7 @@ export function serializeEvent(event: {
     startTime: event.startTime.toISOString(),
     endTime: event.endTime.toISOString(),
     roomName: event.roomName,
+    posterUrl: event.posterUrl ?? undefined,
     statusOverride: event.statusOverride ?? "auto",
     isLive: event.isLive,
     isPublished: event.isPublished,

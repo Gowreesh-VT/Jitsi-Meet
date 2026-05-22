@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { Calendar, ExternalLink, Video, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -566,6 +567,16 @@ function EventPosterModal({
               <X size={18} />
             </button>
             <div style={{ width: "100%", aspectRatio: "16/7", background: `linear-gradient(135deg, rgba(18,19,27,0.9) 0%, ${colors.glow.replace("0.18", "0.35")} 100%)`, border: `1px solid ${colors.border}30`, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "16px", marginBottom: "20px", position: "relative", overflow: "hidden" }}>
+              {event.posterUrl ? (
+                <Image
+                  src={event.posterUrl}
+                  alt={`${event.title} poster`}
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 640px) 100vw, 520px"
+                />
+              ) : null}
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.75) 100%)" }} />
               <div style={{ position: "absolute", inset: 0, backgroundImage: `linear-gradient(${colors.border}18 1px, transparent 1px), linear-gradient(90deg, ${colors.border}18 1px, transparent 1px)`, backgroundSize: "32px 32px" }} />
               <SymbolIcon name={domainMeta[event.domain].icon} className={colors.text} style={{ width: "4rem", height: "4rem", opacity: 0.85, position: "relative", zIndex: 1 }} />
               <span style={{ position: "relative", zIndex: 1, background: colors.border, color: domainMeta[event.domain].accent === "yellow" ? "#1a0e00" : "white", fontSize: "0.68rem", fontWeight: 800, padding: "5px 14px", textTransform: "uppercase", letterSpacing: "0.12em" }}>
