@@ -45,6 +45,7 @@ export async function PUT(request: Request, { params }: Params) {
     startTime: body.startTime ? new Date(body.startTime) : undefined,
     endTime: body.endTime ? new Date(body.endTime) : undefined,
     roomName: typeof body.roomName === "string" ? body.roomName.trim() : undefined,
+    posterUrl: typeof body.posterUrl === "string" ? body.posterUrl.trim() || undefined : undefined,
     statusOverride: ["auto", "live", "ended"].includes(body.statusOverride) ? body.statusOverride : undefined,
     isLive: typeof body.isLive === "boolean" ? body.isLive : undefined,
     isPublished: typeof body.isPublished === "boolean" ? body.isPublished : undefined,

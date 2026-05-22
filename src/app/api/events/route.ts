@@ -27,6 +27,7 @@ export async function POST(request: Request) {
   const title = typeof body.title === "string" ? body.title.trim() : "";
   const description = typeof body.description === "string" ? body.description.trim() : "";
   const roomName = typeof body.roomName === "string" ? body.roomName.trim() : "";
+  const posterUrl = typeof body.posterUrl === "string" ? body.posterUrl.trim() : undefined;
 
   const requiredFields = [
     ["title", title],
@@ -58,6 +59,7 @@ export async function POST(request: Request) {
       startTime,
       endTime,
       roomName: finalRoomName,
+      posterUrl: posterUrl || undefined,
       statusOverride: body.statusOverride === "live" || body.statusOverride === "ended" ? body.statusOverride : "auto",
       isPublished: Boolean(body.isPublished),
     });
