@@ -571,11 +571,12 @@ function EventPosterModal({
               <div className="w-full md:w-[44%]">
                 <div className="overflow-hidden rounded-xl border" style={{ borderColor: `${colors.border}30`, background: "rgba(8, 10, 18, 0.8)" }}>
                   {event.posterUrl ? (
-                    <img
+                    <Image
                       src={event.posterUrl}
                       alt={`${event.title} poster`}
+                      width={1200}
+                      height={800}
                       style={{ width: "100%", height: "auto", display: "block" }}
-                      loading="lazy"
                     />
                   ) : (
                     <div className="flex h-[220px] items-center justify-center text-xs font-bold uppercase tracking-[0.2em] text-arcade-muted">
