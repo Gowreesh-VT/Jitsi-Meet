@@ -527,7 +527,7 @@ const faqs: FaqItem[] = [
   {
     question: "What will we be building during the workshop?",
     answer:
-      "We take a hands-on approach. By the end of the workshop you will have built and deployed a real project—such as a personal portfolio or a Next.js web app—from scratch.",
+      "We take a hands-on approach. By the end of the workshop you will have built and deployed a real project—such as Next.js web app—from scratch or a Crypto-Currency.",
     accent: "red",
   },
   {
@@ -539,7 +539,7 @@ const faqs: FaqItem[] = [
   {
     question: "Will I receive a certificate of completion?",
     answer:
-      "Yes. Participants who complete the final project submission receive a verified certificate from the web development department.",
+      "Yes. Participants who complete the final project submission receive a verified certificate from both HackerRank and Gemini ",
     accent: "blue",
   },
   {
