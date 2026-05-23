@@ -90,7 +90,7 @@ export default async function LandingPage() {
                 <div className="flex items-center justify-center">
                   <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ffd36a]">Prize Pool</p>
-                    <p className="mt-2 text-2xl font-black uppercase tracking-[0.18em] text-white">INR 4L+</p>
+                    <p className="mt-2 text-2xl font-black uppercase tracking-[0.18em] text-white">INR 4 Lakhs+</p>
                   </div>
                 </div>
                 <div className="flex flex-col items-center gap-2 sm:items-start">
