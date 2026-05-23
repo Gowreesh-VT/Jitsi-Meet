@@ -80,9 +80,7 @@ export default async function LandingPage() {
           <div className="hero-rule mb-8" />
 
           <p className="max-w-2xl text-lg leading-relaxed text-arcade-muted">
-            Experience the future of tech empowerment. The Microsoft Innovations Club 
-            Meet Portal brings together high-impact technical workshops and 
-            elite hackathons in one unified retro-futuristic space.
+            A summer of hands-on workshops and hackathons across 5 domains, with 10 workshops and 2 hackathons built to help you explore tech by actually building.
           </p>
 
           <div className="mt-6 w-full max-w-3xl">
