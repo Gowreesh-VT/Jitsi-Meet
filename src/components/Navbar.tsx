@@ -35,17 +35,14 @@ export function Navbar() {
           <Link href={getHref("#schedule")} className={cn("hidden rounded-md px-3 py-2 text-sm font-medium hover:bg-accent sm:inline-flex")}>
             Schedule
           </Link>
-          <Link href={getHref("#sponsors")} className={cn("hidden rounded-md px-3 py-2 text-sm font-medium hover:bg-accent sm:inline-flex")}>
-            Sponsors
-          </Link>
           <Link href={getHref("#organizers")} className={cn("hidden rounded-md px-3 py-2 text-sm font-medium hover:bg-accent sm:inline-flex")}>
             Organizers
           </Link>
-          {/* <Link href={getHref("#certificates")} className={cn("hidden rounded-md px-3 py-2 text-sm font-medium hover:bg-accent sm:inline-flex")}>
+          <Link href={getHref("#certificates")} className={cn("hidden rounded-md px-3 py-2 text-sm font-medium hover:bg-accent sm:inline-flex")}>
             Certificates
-          </Link> */}
-          <Link href={getHref("#faqs")} className={cn("hidden rounded-md px-3 py-2 text-sm font-medium hover:bg-accent sm:inline-flex")}> 
-            FAQ
+          </Link>
+          <Link href={getHref("#faqs")} className={cn("hidden rounded-md px-3 py-2 text-sm font-medium hover:bg-accent sm:inline-flex")}>
+            FAQs
           </Link>
           {session?.user.role === "admin" ? (
             <Link href="/admin" className="hidden items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent sm:inline-flex">
@@ -88,17 +85,14 @@ export function Navbar() {
           <Link href={getHref("#schedule")} className="rounded-md px-3 py-3 text-sm font-medium hover:bg-white/10 border-b border-white/5" onClick={closeMenu}>
             Schedule
           </Link>
-          <Link href={getHref("#sponsors")} className="rounded-md px-3 py-3 text-sm font-medium hover:bg-white/10 border-b border-white/5" onClick={closeMenu}>
-            Sponsors
-          </Link>
           <Link href={getHref("#organizers")} className="rounded-md px-3 py-3 text-sm font-medium hover:bg-white/10 border-b border-white/5" onClick={closeMenu}>
             Organizers
           </Link>
-          {/* <Link href={getHref("#certificates")} className="rounded-md px-3 py-3 text-sm font-medium hover:bg-white/10 border-b border-white/5" onClick={closeMenu}>
+          <Link href={getHref("#certificates")} className="rounded-md px-3 py-3 text-sm font-medium hover:bg-white/10 border-b border-white/5" onClick={closeMenu}>
             Certificates
-          </Link> */}
+          </Link>
           <Link href={getHref("#faqs")} className="rounded-md px-3 py-3 text-sm font-medium hover:bg-white/10 border-b border-white/5" onClick={closeMenu}>
-            FAQ
+            FAQs
           </Link>
           {session?.user.role === "admin" && (
             <Link href="/admin" className="rounded-md px-3 py-3 text-sm font-medium hover:bg-white/10 border-b border-white/5 flex items-center gap-2" onClick={closeMenu}>

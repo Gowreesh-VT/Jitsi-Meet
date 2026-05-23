@@ -15,9 +15,11 @@ import { isVitStudentEmail } from "@/lib/profile";
 
 export const dynamic = "force-dynamic";
 
-// --- To Do --- 
-// [1] Add a Proper Certificate Image URL
-// const certificateImageUrl = "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEk4jW2taHF5hwn3uCcqPm4ORVQJW8SBvgpL0A";
+
+const certificateImageUrls = [
+  "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEFLombEA09oihcYfavCU8QVN7Oswmu3e6j14G",
+  "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEFLombEA09oihcYfavCU8QVN7Oswmu3e6j14G",
+].filter(Boolean);
 
 export default async function LandingPage() {
   const session = await getServerSession(authOptions);
@@ -307,7 +309,7 @@ export default async function LandingPage() {
         </div>
 
         {/* Certificates Section */}
-        {/* <section id="certificates" className="event-section w-full mt-24 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
+        <section id="certificates" className="event-section w-full mt-24 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
           <div className="mx-auto max-w-5xl rounded-4xl border border-white/10 bg-black/25 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-md sm:p-8">
             <div className="mb-8 flex flex-col gap-3 text-center">
               <h2 className="section-title">CERTIFICATES</h2>
@@ -315,15 +317,19 @@ export default async function LandingPage() {
                 Verified certificates are awarded to eligible participants after successful completion of each track.
               </p>
             </div>
-            {certificateImageUrl ? (
-              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4">
-                <Image
-                  src={certificateImageUrl}
-                  alt="Certificate preview"
-                  width={1400}
-                  height={980}
-                  className="h-auto w-full rounded-2xl object-cover"
-                />
+            {certificateImageUrls.length > 0 ? (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {certificateImageUrls.map((certificateUrl, index) => (
+                  <div key={certificateUrl} className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4">
+                    <Image
+                      src={certificateUrl}
+                      alt={`Certificate ${index + 1} preview`}
+                      width={1400}
+                      height={980}
+                      className="h-auto w-full rounded-2xl object-cover"
+                    />
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-sm font-semibold text-red-200">
@@ -331,7 +337,7 @@ export default async function LandingPage() {
               </div>
             )}
           </div>
-        </section> */}
+        </section>
 
         {/* FAQ Section */}
         <section className="event-section faq-section w-full max-w-5xl mt-24" id="faqs">
