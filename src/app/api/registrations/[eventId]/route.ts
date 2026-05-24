@@ -20,6 +20,10 @@ export async function GET(_request: Request, { params }: Params) {
   const filter = session.user.role === "admin" ? { eventId } : { eventId, userId: session.user.id };
   const registrations = await Registration.find(filter).populate("userId", "name email image").sort({ registeredAt: 1 });
 
+  const isPopulatedUser = (value: unknown): value is { _id: unknown; name?: string; email?: string; image?: string } => {
+    return !!value && typeof value === "object" && "email" in value;
+  };
+
   return NextResponse.json({
     registrations: registrations.map((registration) => {
       const reg = registration as unknown as RegistrationDocument;
@@ -27,7 +31,7 @@ export async function GET(_request: Request, { params }: Params) {
         _id: String(reg._id),
         eventId: String(reg.eventId),
         userId: String(reg.userId?._id ?? reg.userId),
-        user: typeof reg.userId === "object" && "email" in reg.userId ? reg.userId : undefined,
+        user: isPopulatedUser(reg.userId) ? reg.userId : undefined,
         mobileNumber: reg.mobileNumber,
         registrationNumber: reg.registrationNumber,
         schoolCollegeName: reg.schoolCollegeName,
