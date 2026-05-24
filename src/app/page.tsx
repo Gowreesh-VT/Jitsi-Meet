@@ -12,6 +12,7 @@ import { authOptions } from "@/lib/auth";
 import Registration from "@/models/Registration";
 import { ScheduleClient } from "@/components/ScheduleClient";
 import { isVitStudentEmail } from "@/lib/profile";
+import { Phone, PhoneOutgoing } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -278,11 +279,21 @@ export default async function LandingPage() {
                       className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10 w-60 shrink-0"
                     >
                       <div className={`absolute inset-0 bg-linear-to-br ${organizer.accent}`} />
-                      <div className="relative flex flex-col items-center justify-between gap-6 min-h-60">
-                        <div className="flex h-32 w-full items-center justify-center rounded-xl bg-transparent">
-                          <div className="flex h-28 w-28 items-center justify-center rounded-full border-2 border-[#ffafd5]/30 bg-white/10 text-3xl font-black tracking-wider text-[#ffafd5] shadow-[0_0_20px_rgba(249,77,180,0.2)] transition-transform duration-300 group-hover:scale-105">
-                            {organizer.name.slice(0, 2).toUpperCase()}
-                          </div>
+                      <div className="relative flex flex-col items-center justify-between gap-4 min-h-60">
+                        <div className="flex h-38 w-full items-center justify-center rounded-xl bg-transparent">
+                          {organizer.photo ? (
+                            <Image
+                              src={organizer.photo}
+                              alt={`${organizer.name}`}
+                              width={128}
+                              height={128}
+                              className="h-36 w-36 rounded-full object-cover bg-white/10 border-2 border-[#ffafd5]/30 shadow-[0_0_20px_rgba(249,77,180,0.2)] transition-transform duration-300 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="flex h-36 w-36 items-center justify-center rounded-full border-2 border-[#ffafd5]/30 bg-white/10 text-4xl font-black tracking-wider text-[#ffafd5] shadow-[0_0_20px_rgba(249,77,180,0.2)] transition-transform duration-300 group-hover:scale-105">
+                              {organizer.name.slice(0, 2).toUpperCase()}
+                            </div>
+                          )}
                         </div>
                         <div className="text-center">
                           <p className="text-base font-black tracking-[0.2em] text-white/90">{organizer.name.toUpperCase()}</p>
@@ -304,10 +315,20 @@ export default async function LandingPage() {
                     >
                       <div className={`absolute inset-0 bg-linear-to-br ${organizer.accent}`} />
                       <div className="relative flex flex-col items-center justify-between gap-6 min-h-60">
-                        <div className="flex h-32 w-full items-center justify-center rounded-xl bg-transparent">
-                          <div className="flex h-28 w-28 items-center justify-center rounded-full border-2 border-[#ffafd5]/30 bg-white/10 text-3xl font-black tracking-wider text-[#ffafd5] shadow-[0_0_20px_rgba(249,77,180,0.2)] transition-transform duration-300 group-hover:scale-105">
-                            {organizer.name.slice(0, 2).toUpperCase()}
-                          </div>
+                        <div className="flex h-36 w-full items-center justify-center rounded-xl bg-transparent">
+                          {organizer.photo ? (
+                            <Image
+                              src={organizer.photo}
+                              alt={`${organizer.name}`}
+                              width={128}
+                              height={128}
+                              className="h-32 w-32 rounded-full object-cover bg-white/10 border-2 border-[#ffafd5]/30 shadow-[0_0_20px_rgba(249,77,180,0.2)] transition-transform duration-300 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="flex h-32 w-32 items-center justify-center rounded-full border-2 border-[#ffafd5]/30 bg-white/10 text-4xl font-black tracking-wider text-[#ffafd5] shadow-[0_0_20px_rgba(249,77,180,0.2)] transition-transform duration-300 group-hover:scale-105">
+                              {organizer.name.slice(0, 2).toUpperCase()}
+                            </div>
+                          )}
                         </div>
                         <div className="text-center">
                           <p className="text-base font-black tracking-[0.2em] text-white/90">{organizer.name.toUpperCase()}</p>
@@ -432,109 +453,134 @@ const organizers = [
     name: "Samyak",
     role: "Vice Chairperson",
     linkedin: "https://www.linkedin.com/in/samyaksrijan",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKECJuszdeJaBN8xfuV7iYTPHK3QA0SXWp2tUhv",
     accent: "from-rose-500/20 via-rose-500/5 to-transparent",
   },
   {
     name: "Sudeep",
     role: "Secretary",
     linkedin: "https://www.linkedin.com/in/sudeep-makindar/",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKE5L8GfxEvK0cVWaoY4UbStprle19NBx8f3nZT",
     accent: "from-blue-500/20 via-blue-500/5 to-transparent",
   },
   {
     name: "Palak",
     role: "Co-secretary",
-    linkedin: "https://www.linkedin.com/in/palak-co-secretary",
+    linkedin: "https://www.linkedin.com/in/palak-malpani-b862a0323",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEISfnBwPc5JbMFG4smKfNiBZauQt6l8OLEyp3",
     accent: "from-yellow-500/20 via-yellow-500/5 to-transparent",
-  },
-  {
-    name: "Suyash",
-    role: "Cybersecurity Lead",
-    linkedin: "https://www.linkedin.com/in/suyash-singh-861a31368",
-    accent: "from-emerald-500/20 via-emerald-500/5 to-transparent",
-  },
-  {
-    name: "Maanya",
-    role: "UI/UX Lead",
-    linkedin: "https://www.linkedin.com/in/maanyaramesh",
-    accent: "from-pink-500/20 via-pink-500/5 to-transparent",
-  },
-  {
-    name: "Bhuvan",
-    role: "CP Lead",
-    linkedin: "https://www.linkedin.com/in/bhuvan-nayak/",
-    accent: "from-purple-500/20 via-purple-500/5 to-transparent",
-  },
-  {
-    name: "Gowreesh V T",
-    role: "Development Lead",
-    linkedin: "https://www.linkedin.com/in/gowreesh",
-    accent: "from-cyan-500/20 via-cyan-500/5 to-transparent",
-  },
-  {
-    name: "Vraj",
-    role: "Computer Programming Lead",
-    linkedin: "https://www.linkedin.com/in/vraj-mevada-bb379221a",
-    accent: "from-indigo-500/20 via-indigo-500/5 to-transparent",
-  },
-  {
-    name: "Anas Arfeen",
-    role: "Co-lead",
-    linkedin: "https://www.linkedin.com/in/anas-arfeen-b94870366/",
-    accent: "from-amber-500/20 via-amber-500/5 to-transparent",
-  },
-  {
-    name: "Vansh",
-    role: "MSA Lead",
-    linkedin: "https://www.linkedin.com/in/vansh-aggarwal-69b423330/",
-    accent: "from-teal-500/20 via-teal-500/5 to-transparent",
-  },
-  {
-    name: "Tanushree",
-    role: "Entrepreneurship Lead",
-    linkedin: "https://in.linkedin.com/in/tanushree-desai-912950382",
-    accent: "from-yellow-500/20 via-yellow-500/5 to-transparent",
-  },
-  {
-    name: "Ayan Chogle",
-    role: "Cybersecurity Lead",
-    linkedin: "https://www.linkedin.com/in/ayan-chogle",
-    accent: "from-lime-500/20 via-lime-500/5 to-transparent",
-  },
-  {
-    name: "Sajjad",
-    role: "Publicity Head",
-    linkedin: "https://www.linkedin.com/in/ahmed-sajjad-shihab",
-    accent: "from-orange-500/20 via-orange-500/5 to-transparent",
-  },
-  {
-    name: "Heba",
-    role: "Lead",
-    linkedin: "https://www.linkedin.com/in/heba-jahan-0073a4323",
-    accent: "from-fuchsia-500/20 via-fuchsia-500/5 to-transparent",
-  },
-  {
-    name: "Preeti",
-    role: "Creatives Head",
-    linkedin: "https://www.linkedin.com/in/preeti-b-r-02047b379/",
-    accent: "from-sky-500/20 via-sky-500/5 to-transparent",
   },
   {
     name: "Gouse Moideen",
     role: "Technical Head",
     linkedin: "https://www.linkedin.com/in/gousemoideen",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEqo3zaDIInNK8kJlzwGpxeOijdSYC2VZAs1XP",
     accent: "from-green-500/20 via-green-500/5 to-transparent",
   },
   {
     name: "Ram",
     role: "Management Secretary",
     linkedin: "https://linkedin.com/in/ramnnn",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEvmEGLHhWmy6tpuiexQX81z0fGaEJbT52MDPl",
     accent: "from-blue-500/20 via-blue-500/5 to-transparent",
+  },
+  {
+    name: "Preeti",
+    role: "Creatives Head",
+    linkedin: "https://www.linkedin.com/in/preeti-b-r-02047b379/",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKElsJLslUmuIWeFadG1QP8jwZAfYKCcb4pk30y",
+    accent: "from-sky-500/20 via-sky-500/5 to-transparent",
+  },
+  {
+    name: "Sajjad",
+    role: "Publicity Head",
+    linkedin: "https://www.linkedin.com/in/ahmed-sajjad-shihab",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKErsUjjionT9jgs5WpEKi34UvaDCyhSeY1McxP",
+    accent: "from-orange-500/20 via-orange-500/5 to-transparent",
+  },
+  {
+    name: "Gowreesh V T",
+    role: "Development Lead",
+    linkedin: "https://www.linkedin.com/in/gowreesh",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEUtYJgRdHmv6NAQPqtFZLJxCe2437IdY1nlS9",
+    accent: "from-cyan-500/20 via-cyan-500/5 to-transparent",
+  },
+  {
+    name: "Suyash",
+    role: "Cybersecurity Lead",
+    linkedin: "https://www.linkedin.com/in/suyash-singh-861a31368",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKECVRDdceJaBN8xfuV7iYTPHK3QA0SXWp2tUhv",
+    accent: "from-emerald-500/20 via-emerald-500/5 to-transparent",
+  },
+  {
+    name: "Ayan Chogle",
+    role: "Cybersecurity Lead",
+    linkedin: "https://www.linkedin.com/in/ayan-chogle",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKElY1TXjUmuIWeFadG1QP8jwZAfYKCcb4pk30y",
+    accent: "from-lime-500/20 via-lime-500/5 to-transparent",
+  },
+  {
+    name: "Maanya",
+    role: "UI/UX Lead",
+    linkedin: "https://www.linkedin.com/in/maanyaramesh",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEQH2Xqh6l1Hn7zksoqKEgIFuwlcDyadAj6SP0",
+    accent: "from-pink-500/20 via-pink-500/5 to-transparent",
+  },
+  {
+    name: "Heba",
+    role: "UI/UX Lead",
+    linkedin: "https://www.linkedin.com/in/heba-jahan-0073a4323",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEnaBdf8X4XfKE8dVYAS3iJPGLUQthW0u6F1xw",
+    accent: "from-fuchsia-500/20 via-fuchsia-500/5 to-transparent",
+  },
+  {
+    name: "Bhuvan",
+    role: "CP Lead",
+    linkedin: "https://www.linkedin.com/in/bhuvan-nayak/",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEk1qSuRaHF5hwn3uCcqPm4ORVQJW8SBvgpL0A",
+    accent: "from-purple-500/20 via-purple-500/5 to-transparent",
+  },
+  {
+    name: "Vraj",
+    role: "CP Lead",
+    linkedin: "https://www.linkedin.com/in/vraj-mevada-bb379221a",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEH8ehus1ltk8sCVhvgKTpUzQyXnafuj70O5i4",
+    accent: "from-indigo-500/20 via-indigo-500/5 to-transparent",
+  },
+  {
+    name: "Anas Arfeen",
+    role: "AI/ML Co-lead",
+    linkedin: "https://www.linkedin.com/in/anas-arfeen-b94870366/",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKE8Fjl68qLQ2xVrP4AaXvOqzW0g1dcDfemSwsp",
+    accent: "from-amber-500/20 via-amber-500/5 to-transparent",
+  },
+  {
+    name: "Vansh",
+    role: "MSA Lead",
+    linkedin: "https://www.linkedin.com/in/vansh-aggarwal-69b423330/",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEF5PHQ2A09oihcYfavCU8QVN7Oswmu3e6j14G",
+    accent: "from-teal-500/20 via-teal-500/5 to-transparent",
+  },
+  {
+    name: "Tanushree",
+    role: "Entrepreneurship Lead",
+    linkedin: "https://in.linkedin.com/in/tanushree-desai-912950382",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEidRRO6o4CjI3DVaMq6R02UgBwNZ7AJy5leEn",
+    accent: "from-yellow-500/20 via-yellow-500/5 to-transparent",
   },
   {
     name: "Humaira",
     role: "Social Media & Content Lead",
     linkedin: "https://www.linkedin.com/in/humaira-aisha-u-435b98382",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEe8IYxV76RN0mDpnTUjK56G2u38oCVSxg7rzQ",
     accent: "from-red-500/20 via-red-500/5 to-transparent",
+  },
+  {
+    name: "Balaganesh",
+    role: "Management Lead",
+    linkedin: "https://www.linkedin.com/in/balaganesh-v-21358b322",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEuNg9ycz4GRJyS3pjE8dT6PNtDZVeIqY7LOAF",
+    accent: "from-purple-500/20 via-purple-500/5 to-transparent",
   }
 ];
 
