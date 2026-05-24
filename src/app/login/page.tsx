@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 
 export default async function LoginPage() {
   const session = await getServerSession(authOptions);
-  if (session) redirect("/schedule");
+  if (session) redirect("/");
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center justify-center px-4 py-12">

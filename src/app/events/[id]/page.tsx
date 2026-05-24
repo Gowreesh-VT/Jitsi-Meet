@@ -61,30 +61,41 @@ export default async function EventDetailPage({ params }: PageProps) {
       <div className="stars-container" />
       <div className="neon-grid" />
       <main className="main-shell relative z-10 py-12">
-        <Link href="/schedule" className="text-sm font-bold tracking-widest text-arcade-muted hover:text-white">BACK TO EVENTS</Link>
+        <Link href="/" className="text-sm font-bold tracking-widest text-arcade-muted hover:text-white">BACK TO EVENTS</Link>
         <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
           <div className="event-card">
             <div className="event-card__content">
-              <div className="mb-6 overflow-hidden rounded-xl border border-white/10" style={{ background: "linear-gradient(135deg, rgba(18,19,27,0.95) 0%, rgba(255,255,255,0.05) 100%)", position: "relative", aspectRatio: "16 / 7" }}>
-                {event.posterUrl ? (
-                  <Image
-                    src={event.posterUrl}
-                    alt={`${event.title} poster`}
-                    fill
-                    style={{ objectFit: "cover" }}
-                    sizes="(max-width: 1024px) 100vw, 640px"
-                  />
-                ) : null}
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%)" }} />
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:items-start">
+                <div
+                  className="overflow-hidden rounded-xl border border-white/10"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(18,19,27,0.95) 0%, rgba(255,255,255,0.08) 100%)",
+                    position: "relative",
+                    aspectRatio: "5 / 7",
+                  }}
+                >
+                  {event.posterUrl ? (
+                    <Image
+                      src={event.posterUrl}
+                      alt={`${event.title} poster`}
+                      fill
+                      style={{ objectFit: "contain", padding: "0.5rem" }}
+                      sizes="(max-width: 1024px) 100vw, 640px"
+                    />
+                  ) : null}
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.2) 100%)" }} />
+                </div>
+                <div>
+                  <div className="event-card__topline">
+                    <span className="tag tag-primary">{event.domain}</span>
+                    <Badge variant={status === "Live" ? "success" : status === "Ended" ? "muted" : "secondary"}>{status}</Badge>
+                    <Badge variant="outline">{event.type === "hackathon" ? "Hackathon" : "Session"}</Badge>
+                  </div>
+                  <h1 className="mt-5 text-4xl font-black tracking-normal text-white">{event.title}</h1>
+                  <p className="mt-6 max-w-3xl text-lg leading-8 text-arcade-muted">{event.description}</p>
+                  <StartsSoonBanner startTime={event.startTime} status={status} />
+                </div>
               </div>
-              <div className="event-card__topline">
-                <span className="tag tag-primary">{event.domain}</span>
-                <Badge variant={status === "Live" ? "success" : status === "Ended" ? "muted" : "secondary"}>{status}</Badge>
-                <Badge variant="outline">{event.type === "hackathon" ? "Hackathon" : "Session"}</Badge>
-              </div>
-              <h1 className="mt-5 text-4xl font-black tracking-normal text-white">{event.title}</h1>
-              <p className="mt-6 max-w-3xl text-lg leading-8 text-arcade-muted">{event.description}</p>
-              <StartsSoonBanner startTime={event.startTime} status={status} />
             </div>
           </div>
 

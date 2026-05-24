@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user.id) redirect("/login");
-  if (session.user.role !== "admin") redirect("/schedule");
+  if (session.user.role !== "admin") redirect("/");
 
   await connectToDatabase();
   const events = await Event.find({}).sort({ startTime: 1 });

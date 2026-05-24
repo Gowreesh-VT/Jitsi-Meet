@@ -17,7 +17,7 @@ export function LoginCard() {
         <CardDescription>Sign in to register for sessions and join live rooms.</CardDescription>
       </CardHeader>
       <CardContent>
-        <Button className="w-full" size="lg" onClick={() => signIn("google", { callbackUrl: "/schedule" })}>
+        <Button className="w-full" size="lg" onClick={() => signIn("google", { callbackUrl: "/" })}>
           <LogIn className="h-4 w-4" />
           Sign in with Google
         </Button>
