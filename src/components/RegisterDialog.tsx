@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,15 +24,38 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { CheckCircle2, Loader2, User } from "lucide-react";
+import { AsYouType, parsePhoneNumberFromString, type CountryCode } from "libphonenumber-js";
 
 const fieldClassName =
   "h-11 w-full rounded-md border border-white/15 bg-white/5 px-3 text-sm text-white outline-none transition-colors focus:border-[#ffafd5] focus:ring-2 focus:ring-[#ffafd5]/20";
 
+const phoneCountries: Array<{ code: CountryCode; label: string }> = [
+  { code: "IN", label: "India (+91)" },
+  { code: "US", label: "United States (+1)" },
+  { code: "GB", label: "United Kingdom (+44)" },
+  { code: "CA", label: "Canada (+1)" },
+  { code: "AU", label: "Australia (+61)" },
+  { code: "SG", label: "Singapore (+65)" },
+  { code: "AE", label: "United Arab Emirates (+971)" },
+  { code: "SA", label: "Saudi Arabia (+966)" },
+  { code: "DE", label: "Germany (+49)" },
+  { code: "FR", label: "France (+33)" },
+  { code: "NL", label: "Netherlands (+31)" },
+  { code: "ES", label: "Spain (+34)" },
+  { code: "IT", label: "Italy (+39)" },
+  { code: "BR", label: "Brazil (+55)" },
+  { code: "MX", label: "Mexico (+52)" },
+  { code: "NG", label: "Nigeria (+234)" },
+  { code: "KE", label: "Kenya (+254)" },
+  { code: "ZA", label: "South Africa (+27)" },
+  { code: "JP", label: "Japan (+81)" },
+  { code: "KR", label: "South Korea (+82)" },
+];
+
 const formSchema = z
   .object({
-    mobileNumber: z
-      .string()
-      .regex(/^[6-9]\d{9}$/, "Please provide a valid 10-digit Indian mobile number."),
+    mobileCountry: z.string().min(1, "Country is required."),
+    mobileNumber: z.string().min(1, "Mobile number is required."),
     registrationNumber: z.string().min(1, "Roll Number is required."),
     institutionType: z.enum(["College", "School"]),
     schoolCollegeName: z.string().min(1, "Institution name is required."),
@@ -40,6 +63,10 @@ const formSchema = z
     year: z.string().optional(),
   })
   .superRefine((values, ctx) => {
+    const phone = parsePhoneNumberFromString(values.mobileNumber, values.mobileCountry as CountryCode);
+    if (!phone || !phone.isValid()) {
+      ctx.addIssue({ code: "custom", path: ["mobileNumber"], message: "Enter a valid mobile number for the selected country." });
+    }
     if (values.institutionType === "School" && !values.grade) {
       ctx.addIssue({ code: "custom", path: ["grade"], message: "Grade is required." });
     }
@@ -52,6 +79,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export type SavedProfile = {
   mobileNumber: string;
+  mobileCountry: string;
   registrationNumber: string;
   schoolCollegeName: string;
   institutionType: "College" | "School";
@@ -222,6 +250,7 @@ export function RegisterDialog({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      mobileCountry: savedProfile?.mobileCountry || "IN",
       mobileNumber: savedProfile?.mobileNumber ?? "",
       registrationNumber: savedProfile?.registrationNumber ?? "",
       institutionType: savedProfile?.institutionType ?? "College",
@@ -238,6 +267,18 @@ export function RegisterDialog({
     name: "institutionType",
     defaultValue: savedProfile?.institutionType ?? "College",
   });
+  const mobileCountry = useWatch({
+    control: form.control,
+    name: "mobileCountry",
+    defaultValue: savedProfile?.mobileCountry || "IN",
+  });
+
+  useEffect(() => {
+    const currentNumber = form.getValues("mobileNumber");
+    if (!currentNumber) return;
+    const formatted = new AsYouType(mobileCountry as CountryCode).input(currentNumber);
+    form.setValue("mobileNumber", formatted, { shouldValidate: true });
+  }, [mobileCountry, form]);
 
   async function onSubmit(values: FormValues) {
     setLoading(true);
@@ -301,12 +342,39 @@ export function RegisterDialog({
           >
             <FormField
               control={form.control}
+              name="mobileCountry"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Country</FormLabel>
+                  <FormControl>
+                    <select {...field} className={fieldClassName}>
+                      {phoneCountries.map((country) => (
+                        <option key={country.code} value={country.code}>
+                          {country.label}
+                        </option>
+                      ))}
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="mobileNumber"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Mobile Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="9876543210" {...field} className={fieldClassName} />
+                    <Input
+                      placeholder="Enter mobile number"
+                      {...field}
+                      onChange={(event) => {
+                        const formatted = new AsYouType(form.getValues("mobileCountry") as CountryCode).input(event.target.value);
+                        field.onChange(formatted);
+                      }}
+                      className={fieldClassName}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

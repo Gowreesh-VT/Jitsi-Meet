@@ -15,7 +15,7 @@ export async function GET() {
   // Find the most recent registration to pull stored profile data
   const latest = await Registration.findOne({ userId: session.user.id })
     .sort({ registeredAt: -1 })
-    .select("mobileNumber registrationNumber schoolCollegeName institutionType grade year");
+    .select("mobileNumber mobileCountry registrationNumber schoolCollegeName institutionType grade year");
 
   if (!latest) {
     return NextResponse.json({ profile: null }, { status: 200 });
@@ -24,6 +24,7 @@ export async function GET() {
   return NextResponse.json({
     profile: {
       mobileNumber: latest.mobileNumber ?? "",
+      mobileCountry: latest.mobileCountry ?? "IN",
       registrationNumber: latest.registrationNumber ?? "",
       schoolCollegeName: latest.schoolCollegeName ?? "",
       institutionType: latest.institutionType ?? "College",

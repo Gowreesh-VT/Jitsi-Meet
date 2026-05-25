@@ -6,8 +6,8 @@ const RegistrationSchema = new Schema({
   mobileNumber: {
     type: String,
     trim: true,
-    match: [/^[6-9]\d{9}$/, "Please provide a valid 10-digit mobile number"],
   },
+  mobileCountry: { type: String, trim: true },
   registrationNumber: { type: String, trim: true },
   schoolCollegeName: { type: String, trim: true },
   institutionType: { type: String, enum: ["College", "School"] },

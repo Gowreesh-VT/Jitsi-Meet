@@ -1,11 +1,13 @@
 export type StoredProfile = {
   mobileNumber?: string | null;
+  mobileCountry?: string | null;
   registrationNumber?: string | null;
   schoolCollegeName?: string | null;
 };
 
 export type ProfileSubmission = {
   mobileNumber: string;
+  mobileCountry: string;
   registrationNumber: string;
   schoolCollegeName: string;
   isVitStudent: boolean;
@@ -32,6 +34,7 @@ export function buildProfileSubmission(params: {
 
   return {
     mobileNumber: normalizeProfileValue(params.body.mobileNumber),
+    mobileCountry: normalizeProfileValue(params.body.mobileCountry),
     registrationNumber: normalizeProfileValue(params.body.registrationNumber),
     schoolCollegeName: isVitStudent
       ? getDefaultSchoolCollegeName(params.email)

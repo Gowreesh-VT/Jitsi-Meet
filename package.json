@@ -20,6 +20,7 @@
     "@vercel/speed-insights": "^2.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "libphonenumber-js": "^1.13.3",
     "lucide-react": "^1.16.0",
     "mongoose": "^9.6.2",
     "next": "^16.2.6",

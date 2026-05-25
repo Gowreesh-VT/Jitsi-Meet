@@ -7,8 +7,7 @@ import { getStatus } from "@/lib/events";
 import { buildProfileSubmission } from "@/lib/profile";
 import Event from "@/models/Event";
 import Registration from "@/models/Registration";
-
-const mobileRegex = /^[6-9]\d{9}$/;
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -16,7 +15,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Sign in required" }, { status: 401 });
   }
 
-  const { eventId, mobileNumber, registrationNumber, schoolCollegeName, institutionType, grade, year } = await request.json();
+  const { eventId, mobileNumber, mobileCountry, registrationNumber, schoolCollegeName, institutionType, grade, year } = await request.json();
   if (!eventId) return NextResponse.json({ message: "eventId is required" }, { status: 400 });
   if (!isValidObjectId(eventId)) return NextResponse.json({ message: "Event not found" }, { status: 404 });
   if (institutionType !== "College" && institutionType !== "School") {
@@ -25,11 +24,16 @@ export async function POST(request: Request) {
 
   const profileSubmission = buildProfileSubmission({
     email: session.user.email.toLowerCase(),
-    body: { mobileNumber, registrationNumber, schoolCollegeName },
+    body: { mobileNumber, mobileCountry, registrationNumber, schoolCollegeName },
   });
 
-  if (!mobileRegex.test(profileSubmission.mobileNumber)) {
-    return NextResponse.json({ message: "Please provide a valid 10-digit Indian mobile number." }, { status: 400 });
+  if (!profileSubmission.mobileCountry) {
+    return NextResponse.json({ message: "Please select a country." }, { status: 400 });
+  }
+
+  const phone = parsePhoneNumberFromString(profileSubmission.mobileNumber, profileSubmission.mobileCountry || undefined);
+  if (!phone || !phone.isValid()) {
+    return NextResponse.json({ message: "Please provide a valid mobile number for the selected country." }, { status: 400 });
   }
 
   if (!profileSubmission.registrationNumber) {
@@ -67,7 +71,8 @@ export async function POST(request: Request) {
     const registration = await Registration.create({
       eventId,
       userId: session.user.id,
-      mobileNumber: profileSubmission.mobileNumber,
+      mobileNumber: phone.number,
+      mobileCountry: phone.country ?? profileSubmission.mobileCountry,
       registrationNumber: profileSubmission.registrationNumber,
       schoolCollegeName: profileSubmission.schoolCollegeName,
       institutionType,
