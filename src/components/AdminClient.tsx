@@ -22,7 +22,13 @@ type Participant = {
   meetHistory?: Array<{ joinedAt: string; leftAt?: string }>;
 };
 
-export function AdminClient({ initialEvents }: { initialEvents: SerializedEvent[] }) {
+export function AdminClient({
+  initialEvents,
+  totalRegistrations,
+}: {
+  initialEvents: SerializedEvent[];
+  totalRegistrations: number;
+}) {
   const [events, setEvents] = React.useState(initialEvents);
   const [editing, setEditing] = React.useState<SerializedEvent | null>(null);
   const [participants, setParticipants] = React.useState<Record<string, Participant[]>>({});
@@ -158,6 +164,13 @@ export function AdminClient({ initialEvents }: { initialEvents: SerializedEvent[
           <h1 className="text-3xl font-semibold tracking-normal">Admin Panel</h1>
           <p className="mt-2 text-muted-foreground">Manage published and draft events, participants, and admin access.</p>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Overall registrations</CardDescription>
+            <CardTitle className="text-3xl">{totalRegistrations}</CardTitle>
+          </CardHeader>
+        </Card>
 
         {events.map((event) => {
           const { date, time } = formatEventWindow(event.startTime, event.endTime);
