@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
 
 const certificateImageUrls = [
   "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEFLombEA09oihcYfavCU8QVN7Oswmu3e6j14G",
-  "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEFLombEA09oihcYfavCU8QVN7Oswmu3e6j14G",
+  "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEQx1FU2l1Hn7zksoqKEgIFuwlcDyadAj6SP0V",
 ].filter(Boolean);
 
 export default async function LandingPage() {

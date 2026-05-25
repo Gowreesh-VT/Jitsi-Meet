@@ -25,9 +25,11 @@ type Participant = {
 export function AdminClient({
   initialEvents,
   totalRegistrations,
+  totalUsers,
 }: {
   initialEvents: SerializedEvent[];
   totalRegistrations: number;
+  totalUsers: number;
 }) {
   const [events, setEvents] = React.useState(initialEvents);
   const [editing, setEditing] = React.useState<SerializedEvent | null>(null);
@@ -165,12 +167,20 @@ export function AdminClient({
           <p className="mt-2 text-muted-foreground">Manage published and draft events, participants, and admin access.</p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardDescription>Overall registrations</CardDescription>
-            <CardTitle className="text-3xl">{totalRegistrations}</CardTitle>
-          </CardHeader>
-        </Card>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardDescription>Overall registrations</CardDescription>
+              <CardTitle className="text-3xl">{totalRegistrations}</CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardDescription>Total users</CardDescription>
+              <CardTitle className="text-3xl">{totalUsers}</CardTitle>
+            </CardHeader>
+          </Card>
+        </div>
 
         {events.map((event) => {
           const { date, time } = formatEventWindow(event.startTime, event.endTime);
