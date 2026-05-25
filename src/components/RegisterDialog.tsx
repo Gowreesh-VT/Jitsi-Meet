@@ -33,7 +33,7 @@ const formSchema = z
     mobileNumber: z
       .string()
       .regex(/^[6-9]\d{9}$/, "Please provide a valid 10-digit Indian mobile number."),
-    registrationNumber: z.string().min(1, "Registration number is required."),
+    registrationNumber: z.string().min(1, "Roll/Registration number is required."),
     institutionType: z.enum(["College", "School"]),
     schoolCollegeName: z.string().min(1, "Institution name is required."),
     grade: z.string().optional(),
@@ -135,7 +135,7 @@ function QuickConfirmDialog({
             </span>
           </div>
           <ProfileRow label="Mobile Number" value={profile.mobileNumber} />
-          <ProfileRow label="Registration Number" value={profile.registrationNumber} />
+          <ProfileRow label="Roll/Registration Number" value={profile.registrationNumber} />
           <ProfileRow label="Institution" value={profile.schoolCollegeName} />
           {label && (
             <ProfileRow
@@ -318,10 +318,10 @@ export function RegisterDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {isVitStudent ? "VIT Registration Number" : "Registration Number"}
+                    {isVitStudent ? "VIT Registration Number" : "Roll/Registration Number"}
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="22BCE1234" {...field} className={fieldClassName} />
+                    <Input {...field} className={fieldClassName} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
