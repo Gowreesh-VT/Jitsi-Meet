@@ -70,8 +70,7 @@ export default async function LandingPage() {
           <h1 className="mb-4 flex justify-center">
             <span className="sr-only">MICROCRAFT</span>
             <Image 
-              src="https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEEBFgnrzHSbAfolN0Uc2Ti7Iud45D3KhyjMga" 
-              alt="MICROCRAFT" 
+              src="https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEEBFgnrzHSbAfolN0Uc2Ti7Iud45D3KhyjMga"               alt="MICROCRAFT" 
               width={600} 
               height={180} 
               className="object-contain max-w-full h-auto drop-shadow-[0_0_24px_rgba(249,77,180,0.52)]"              priority
@@ -483,6 +482,13 @@ const organizers = [
     accent: "from-blue-500/20 via-blue-500/5 to-transparent",
   },
   {
+    name: "AK",
+    role: "Events Head",
+    linkedin: "https://www.linkedin.com/in/akanksha-kulkarni-013325256",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEuNsZGPz4GRJyS3pjE8dT6PNtDZVeIqY7LOAF",
+    accent: "from-orange-500/20 via-orange-500/5 to-transparent",
+  },
+  {
     name: "Preeti",
     role: "Creatives Head",
     linkedin: "https://www.linkedin.com/in/preeti-b-r-02047b379/",
@@ -502,6 +508,13 @@ const organizers = [
     linkedin: "https://www.linkedin.com/in/gowreesh",
     photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEUtYJgRdHmv6NAQPqtFZLJxCe2437IdY1nlS9",
     accent: "from-cyan-500/20 via-cyan-500/5 to-transparent",
+  },
+  {
+    name: "Dhakshini",
+    role: "Development Lead",
+    linkedin: "https://www.linkedin.com/in/sri-saidhakshini-venkatesan-bb4617382/",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEHHbAQd1ltk8sCVhvgKTpUzQyXnafuj70O5i4",
+    accent: "from-emerald-500/20 via-emerald-500/5 to-transparent",
   },
   {
     name: "Suyash",
@@ -579,7 +592,21 @@ const organizers = [
     linkedin: "https://www.linkedin.com/in/balaganesh-v-21358b322",
     photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEuNg9ycz4GRJyS3pjE8dT6PNtDZVeIqY7LOAF",
     accent: "from-purple-500/20 via-purple-500/5 to-transparent",
-  }
+  },
+  {
+    name: "Suhnny",
+    role: "Management Lead",
+    linkedin: "https://www.linkedin.com/in/suhani-jain-64bb60363?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEM5amgbyDbXnFqkrBpg079zYKPjmR1N2EuO5T",
+    accent: "from-sky-500/20 via-sky-500/5 to-transparent",
+  },
+    {
+    name: "Meera",
+    role: "Design Lead",
+    linkedin: "https://www.linkedin.com/in/meera-sujith-686ba1379?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEOSinyiWot5fUOEcXdyaZNTrPYb7MSJQIlwzH",
+    accent: "from-fuchsia-500/20 via-fuchsia-500/5 to-transparent",
+  },
 ];
 
 type FaqItem = {

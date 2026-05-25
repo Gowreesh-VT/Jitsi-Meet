@@ -31,7 +31,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Please select a country." }, { status: 400 });
   }
 
-  const phone = parsePhoneNumberFromString(profileSubmission.mobileNumber, profileSubmission.mobileCountry || undefined);
+  // profileSubmission.mobileCountry is string | undefined — cast to any to satisfy libphonenumber-js CountryCode typing
+  const phone = parsePhoneNumberFromString(profileSubmission.mobileNumber, (profileSubmission.mobileCountry || undefined) as any);
   if (!phone || !phone.isValid()) {
     return NextResponse.json({ message: "Please provide a valid mobile number for the selected country." }, { status: 400 });
   }
