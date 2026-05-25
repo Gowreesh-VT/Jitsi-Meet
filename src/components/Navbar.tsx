@@ -18,6 +18,9 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur">
+      {/* <div className="w-full border-b border-white/10 bg-[#ffafd5]/10 px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 sm:text-[13px]">
+        700+ students joined across 16 different institutions. Lock your spot now.
+      </div> */}
       <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-3 font-semibold" onClick={closeMenu}>
           <span className="flex h-10 w-12 items-center justify-center rounded-md bg-white/80 p-1.5 shadow-sm ring-1 ring-border dark:bg-white/10">
