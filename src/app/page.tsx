@@ -219,11 +219,11 @@ export default async function LandingPage() {
                       url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEdI7htgFn631F9x5hwaSXEY2mNqbjRAi8ulfs",
                       accent: "from-sky-400/20 via-sky-400/5 to-transparent",
                     },
-                    {
-                      name: "Devfolio",
-                      url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEkjsjQpaHF5hwn3uCcqPm4ORVQJW8SBvgpL0A",
-                      accent: "from-blue-400/20 via-blue-400/5 to-transparent",
-                    },
+                    // {
+                    //   name: "Devfolio",
+                    //   url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEkjsjQpaHF5hwn3uCcqPm4ORVQJW8SBvgpL0A",
+                    //   accent: "from-blue-400/20 via-blue-400/5 to-transparent",
+                    // },
                   ].map((sponsor) => (
                     <div key={sponsor.name} className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10 sm:p-5">
                       <div className={`absolute inset-0 bg-linear-to-br ${sponsor.accent}`} />
