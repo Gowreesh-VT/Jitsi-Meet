@@ -12,7 +12,7 @@ import { authOptions } from "@/lib/auth";
 import Registration from "@/models/Registration";
 import { ScheduleClient } from "@/components/ScheduleClient";
 import { isVitStudentEmail } from "@/lib/profile";
-import { Phone, PhoneOutgoing } from "lucide-react";
+import { HomeTour } from "@/components/HomeTour";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +49,7 @@ export default async function LandingPage() {
 
   return (
     <div className="schedule-retro relative min-h-screen">
+      <HomeTour />
       {/* Animated Background Layers */}
       <div className="stars-container" />
       <div className="neon-grid" />
@@ -84,11 +85,11 @@ export default async function LandingPage() {
           </p>
 
           <div className="mt-6 w-full max-w-3xl">
-            <div className="relative overflow-hidden rounded-3xl border border-[#ffd36a]/25 bg-black/45 p-4 shadow-[0_0_40px_rgba(255,211,106,0.2)] backdrop-blur-sm sm:p-5">
+            <div className="relative overflow-hidden rounded-2xl border border-[#ffd36a]/25 bg-black/45 p-4 shadow-[0_0_40px_rgba(255,211,106,0.2)] backdrop-blur-sm sm:p-5">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(255,211,106,0.2),transparent_55%)]" />
               <div className="relative grid grid-cols-1 items-center gap-4 text-center sm:grid-cols-[auto_1fr] sm:text-left">
                 <div className="flex items-center justify-center">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                  <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ffd36a]">Prize Pool</p>
                     <p className="mt-2 text-2xl font-black uppercase tracking-[0.18em] text-white">INR 4 Lakhs+</p>
                   </div>
@@ -109,7 +110,7 @@ export default async function LandingPage() {
 
           {nextEvent && nextEventWindow && (
             <div className="mb-12 w-full max-w-4xl">
-              <div className="relative overflow-hidden border border-[#79f2a1]/30 bg-black/45 p-5 shadow-[0_0_42px_rgba(121,242,161,0.12)] backdrop-blur-xl sm:p-7">
+              <div className="relative overflow-hidden border border-[#79f2a1]/30 bg-black/45 rounded-2xl p-5 shadow-[0_0_42px_rgba(121,242,161,0.12)] backdrop-blur-xl sm:p-7">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(121,242,161,0.14),transparent_45%)]" />
                 <div className="relative flex flex-col gap-6 lg:grid-cols-[1fr_280px] lg:items-center">
                   <div className="text-center">
@@ -118,7 +119,7 @@ export default async function LandingPage() {
                     <p className="mt-3 text-sm font-bold uppercase tracking-[0.18em] text-arcade-muted">{nextEventWindow.date} / {nextEventWindow.time}</p>
                     <p className="mt-4 line-clamp-2 text-sm leading-6 text-arcade-muted">{nextEvent.description}</p>
                   </div>
-                  <div className="border border-[#79f2a1]/20 bg-black/50 p-4">
+                  <div className="border rounded-2xl border-[#79f2a1]/20 bg-black/50 p-4">
                     <p className="mb-4! text-center text-[11px] font-black uppercase tracking-[0.35em] text-[#79f2a1]">Starts In</p>
                     <CountdownTimer target={nextEvent.startTime.toISOString()} />
                   </div>
@@ -135,12 +136,12 @@ export default async function LandingPage() {
             <h2 className="section-title">SCHEDULE</h2>
           </div>
           {scheduledEvents.length === 0 ? (
-            <div className="event-card max-w-2xl mx-auto text-center py-12">
+            <div id="events-section" className="event-card max-w-2xl mx-auto text-center py-12">
               <h3 className="event-card__title mb-4">NO DATA DETECTED</h3>
               <p className="text-arcade-muted">The event stream is currently offline. Check back later.</p>
             </div>
           ) : (
-            <div className="w-full max-w-5xl mx-auto">
+            <div id="events-section" className="w-full max-w-5xl mx-auto">
               <ScheduleClient 
                 initialEvents={scheduledEvents} 
                 userRegistrations={userRegistrations}
@@ -212,7 +213,7 @@ export default async function LandingPage() {
                   <p className="text-[10px] font-black uppercase tracking-[0.35em] text-white/70 sm:text-xs sm:tracking-[0.5em]">Community Sponsors</p>
                   <span className="h-px w-16 bg-white/20 sm:w-10" />
                 </div>
-                <div className="grid grid-cols-1 place-items-center sm:grid-cols-2">
+                <div className="flex flex-wrap justify-center">
                   {[
                     {
                       name: "Unstop",
@@ -405,7 +406,7 @@ export default async function LandingPage() {
                 <li><Link href="https://www.microsoftinnovations.club" className="hover:text-primary transition-colors">Microsoft Innovations Club</Link></li>
               </ul>
             </div>
-            <div>
+            <div id="contact-footer">
               <h3 className="text-emerald-300 font-black tracking-tighter text-xl mb-6">COORDINATORS</h3>
               <div className="space-y-4 text-sm font-semibold text-arcade-muted">
                 <div>
@@ -594,7 +595,7 @@ const organizers = [
     accent: "from-purple-500/20 via-purple-500/5 to-transparent",
   },
   {
-    name: "Suhnny",
+    name: "Suhani",
     role: "Management Lead",
     linkedin: "https://www.linkedin.com/in/suhani-jain-64bb60363?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
     photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKECWEPkHeJaBN8xfuV7iYTPHK3QA0SXWp2tUhv",

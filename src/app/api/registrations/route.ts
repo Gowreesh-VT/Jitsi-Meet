@@ -7,7 +7,7 @@ import { getStatus } from "@/lib/events";
 import { buildProfileSubmission } from "@/lib/profile";
 import Event from "@/models/Event";
 import Registration from "@/models/Registration";
-import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { isSupportedCountry, parsePhoneNumberFromString, type CountryCode } from "libphonenumber-js";
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -31,8 +31,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Please select a country." }, { status: 400 });
   }
 
-  // profileSubmission.mobileCountry is string | undefined — cast to any to satisfy libphonenumber-js CountryCode typing
-  const phone = parsePhoneNumberFromString(profileSubmission.mobileNumber, (profileSubmission.mobileCountry || undefined) as any);
+  if (!isSupportedCountry(profileSubmission.mobileCountry)) {
+    return NextResponse.json({ message: "Please select a valid country." }, { status: 400 });
+  }
+
+  const phone = parsePhoneNumberFromString(profileSubmission.mobileNumber, profileSubmission.mobileCountry as CountryCode);
   if (!phone || !phone.isValid()) {
     return NextResponse.json({ message: "Please provide a valid mobile number for the selected country." }, { status: 400 });
   }

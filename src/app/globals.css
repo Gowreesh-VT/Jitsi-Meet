@@ -470,6 +470,7 @@ body {
   align-items: center;
   background: rgba(30, 31, 39, 0.86);
   border: 2px solid rgba(255, 175, 213, 0.16);
+  border-radius: 12px;
   color: var(--arcade-foreground);
   display: flex;
   font-weight: 800;

@@ -50,7 +50,7 @@ const coordinatorDirectory: Record<Domain, { name: string; phone: string }[]> = 
   ],
   Dev: [
     { name: "Gowreesh V T", phone: "+91 83001 44343" },
-    { name: "SriSai Dhakshini", phone: "+91 99406 42471" },
+    { name: "Sri Saidhakshini", phone: "+91 99406 42471" },
   ],
   Hackathon: [
     { name: "Gouse Moideen", phone: "+91 86376 33305" },
@@ -117,7 +117,7 @@ export function ScheduleClient({
     };
 
     checkAll();
-    const interval = window.setInterval(checkAll, 15_000);
+    const interval = window.setInterval(checkAll, 30_000);
     return () => window.clearInterval(interval);
   }, [initialEvents, fetchStatus]);
 
@@ -456,6 +456,7 @@ function RetroEventCard({
       style={{
         background: "rgba(18, 19, 27, 0.92)",
         border: `2px solid ${colors.border}`,
+        borderRadius: "8px",
         padding: "22px",
         minHeight: "220px",
         display: "flex",
@@ -512,6 +513,7 @@ function HackathonEventCard({ event, onCardClick }: { event: SerializedEvent; on
       style={{
         background: "rgba(18, 19, 27, 0.92)",
         border: "2px solid #fbbc04",
+        borderRadius: "8px",
         padding: "22px",
         minHeight: "250px",
         display: "flex",
@@ -590,13 +592,13 @@ function EventPosterModal({
     <>
       {!showRegister ? (
         <div className="dialog-overlay" onClick={handleBackdropClick} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div className="modal-panel" style={{ width: "min(920px, calc(100vw - 32px))", maxHeight: "min(86vh, 760px)", overflowY: "auto", borderColor: colors.border, position: "relative", boxShadow: `0 24px 80px rgba(0,0,0,0.55), 0 0 60px ${colors.glow}` }}>
+          <div className="modal-panel" style={{ borderRadius: "8px", width: "min(920px, calc(100vw - 32px))", maxHeight: "min(86vh, 760px)", overflowY: "auto", borderColor: colors.border, position: "relative", boxShadow: `0 24px 80px rgba(0,0,0,0.55), 0 0 60px ${colors.glow}` }}>
             <button onClick={onClose} className="modal-close" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "var(--arcade-muted)", cursor: "pointer", padding: "6px", display: "flex", alignItems: "center", justifyContent: "center" }} aria-label="Close modal">
               <X size={18} />
             </button>
             <div className="flex flex-col gap-6 md:flex-row md:gap-8">
               <div className="w-full md:w-[44%]">
-                <div className="overflow-hidden rounded-xl border" style={{ borderColor: `${colors.border}30`, background: "rgba(8, 10, 18, 0.8)" }}>
+                <div className="overflow-hidden rounded-lg border" style={{ borderColor: `${colors.border}30`, background: "rgba(8, 10, 18, 0.8)" }}>
                   {event.posterUrl ? (
                     <Image
                       src={event.posterUrl}
