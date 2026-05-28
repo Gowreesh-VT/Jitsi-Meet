@@ -43,8 +43,6 @@ export async function GET(request: Request) {
 
         userName: "$user.name",
         userEmail: "$user.email",
-        userImage: "$user.image",
-        userRole: "$user.role",
         userCreatedAt: "$user.createdAt",
 
         eventName: "$event.title",
@@ -53,9 +51,6 @@ export async function GET(request: Request) {
         eventStartTime: "$event.startTime",
         eventEndTime: "$event.endTime",
         eventRoomName: "$event.roomName",
-        eventStatusOverride: "$event.statusOverride",
-        eventIsLive: "$event.isLive",
-        eventIsPublished: "$event.isPublished",
 
         mobileNumber: 1,
         mobileCountry: 1,
@@ -65,7 +60,6 @@ export async function GET(request: Request) {
         grade: 1,
         year: 1,
         registeredAt: 1,
-        meetHistory: 1,
       },
     },
     { $sort: { registeredAt: -1 } },
