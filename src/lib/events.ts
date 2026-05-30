@@ -5,7 +5,7 @@ export type Domain = (typeof DOMAINS)[number];
 export type EventType = (typeof EVENT_TYPES)[number];
 export type EventStatus = "Upcoming" | "Live" | "Ended";
 
-const REGISTRATION_CLOSED_TITLES = ["Bug Hunt"];
+const REGISTRATION_CLOSED_TITLES = ["Bug Hunt", "Algo Sprint"];
 
 export type SerializedEvent = {
   _id: string;
