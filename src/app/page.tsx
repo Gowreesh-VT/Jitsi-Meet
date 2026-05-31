@@ -168,7 +168,7 @@ export default async function LandingPage() {
                   <p className="text-[10px] font-black uppercase tracking-[0.35em] text-white/70 sm:text-xs sm:tracking-[0.5em]">Official Sponsors</p>
                   <span className="h-px w-16 bg-white/20 sm:w-10" />
                 </div>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   {[
                     {
                       name: "HackerRank",
@@ -185,11 +185,16 @@ export default async function LandingPage() {
                       url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEQEDVFkl1Hn7zksoqKEgIFuwlcDyadAj6SP0V",
                       accent: "from-blue-400/20 via-blue-400/5 to-transparent",
                     },
+                    {
+                      name: "Bloom",
+                      url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEjWJiZewQyu54mGkgTXJiCO360YzKMF7waoWA",
+                      accent: "from-pink-400/20 via-pink-400/5 to-transparent",
+                    }
                   ].map((sponsor) => (
-                    <div key={sponsor.name} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10">
+                    <div key={sponsor.name} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10">
                       <div className={`absolute inset-0 bg-linear-to-br ${sponsor.accent}`} />
-                      <div className="relative flex min-h-44 flex-col items-center justify-between gap-4">
-                        <div className="flex h-24 w-full items-center justify-center rounded-xl bg-transparent px-0 py-0 transition-transform duration-300 group-hover:scale-[1.02]">
+                      <div className="relative flex min-h-36 flex-col items-center justify-between gap-3">
+                        <div className="flex h-20 w-full items-center justify-center rounded-xl bg-transparent px-0 py-0 transition-transform duration-300 group-hover:scale-[1.02]">
                           <Image
                             src={sponsor.url}
                             alt={`${sponsor.name} logo`}
@@ -226,10 +231,10 @@ export default async function LandingPage() {
                     //   accent: "from-blue-400/20 via-blue-400/5 to-transparent",
                     // },
                   ].map((sponsor) => (
-                    <div key={sponsor.name} className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10 sm:p-5">
+                    <div key={sponsor.name} className="group relative w-full max-w-xs overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10 sm:p-4">
                       <div className={`absolute inset-0 bg-linear-to-br ${sponsor.accent}`} />
-                      <div className="relative flex min-h-36 flex-col items-center justify-between gap-4">
-                        <div className="flex h-16 w-full items-center justify-center rounded-xl bg-transparent px-0 py-0 transition-transform duration-300 group-hover:scale-[1.02] sm:h-20">
+                      <div className="relative flex min-h-32 flex-col items-center justify-between gap-3">
+                        <div className="flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-0 py-0 transition-transform duration-300 group-hover:scale-[1.02] sm:h-16">
                           <Image
                             src={sponsor.url}
                             alt={`${sponsor.name} logo`}
