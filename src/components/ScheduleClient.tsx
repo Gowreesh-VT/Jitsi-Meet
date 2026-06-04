@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { RegisterDialog, type SavedProfile } from "@/components/RegisterDialog";
 import { SymbolIcon } from "@/components/event-cards";
-import { DOMAINS, formatEventWindow, getMeetUrl, getStatus, isRegistrationClosed, type Domain, type SerializedEvent } from "@/lib/events";
+import { DOMAINS, getMeetUrl, getStatus, isRegistrationClosed, type Domain, type SerializedEvent } from "@/lib/events";
 import { useSession, signIn } from "next-auth/react";
 import { toast } from "sonner";
 
@@ -59,6 +59,28 @@ const coordinatorDirectory: Record<Domain, { name: string; phone: string }[]> = 
 };
 
 const toWhatsAppLink = (phone: string) => `https://wa.me/${phone.replace(/\D/g, "")}`;
+
+function formatEventWindowRaw(startTime: Date | string, endTime: Date | string) {
+  const startsAt = new Date(startTime);
+  const endsAt = new Date(endTime);
+
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const weekday = weekdays[startsAt.getUTCDay()];
+  const day = startsAt.getUTCDate();
+  const month = months[startsAt.getUTCMonth()];
+  const year = startsAt.getUTCFullYear();
+  const date = `${weekday}, ${day} ${month} ${year}`;
+
+  const startHour = startsAt.getUTCHours();
+  const startMinute = String(startsAt.getUTCMinutes()).padStart(2, "0");
+  const endHour = endsAt.getUTCHours();
+  const endMinute = String(endsAt.getUTCMinutes()).padStart(2, "0");
+  const time = `${startHour}:${startMinute} - ${endHour}:${endMinute}`;
+
+  return { date, time };
+}
 
 interface EventStatusData {
   isLive: boolean;
@@ -290,7 +312,7 @@ function LiveEventCard({
   onCardClick: () => void;
   initialIsRegistered: boolean;
 }) {
-  const { date, time } = formatEventWindow(event.startTime, event.endTime);
+  const { date, time } = formatEventWindowRaw(event.startTime, event.endTime);
   const isRegistered = statusData?.isRegistered ?? initialIsRegistered;
   const isLive = statusData?.isLive ?? event.isLive;
   const statusOverride = statusData?.statusOverride ?? event.statusOverride;
@@ -452,7 +474,7 @@ function RetroEventCard({
 }) {
   const meta = domainMeta[event.domain];
   const colors = accentColors[meta.accent];
-  const { date, time } = formatEventWindow(event.startTime, event.endTime);
+  const { date, time } = formatEventWindowRaw(event.startTime, event.endTime);
 
   return (
     <button
@@ -509,7 +531,7 @@ function RetroEventCard({
 }
 
 function HackathonEventCard({ event, onCardClick }: { event: SerializedEvent; onCardClick: (event: SerializedEvent) => void }) {
-  const { date, time } = formatEventWindow(event.startTime, event.endTime);
+  const { date, time } = formatEventWindowRaw(event.startTime, event.endTime);
 
   return (
     <button
@@ -586,7 +608,7 @@ function EventPosterModal({
 }) {
   const colors = accentColors[domainMeta[event.domain].accent];
   const status = getStatus(event.startTime, event.endTime, event.statusOverride);
-  const { date, time } = formatEventWindow(event.startTime, event.endTime);
+  const { date, time } = formatEventWindowRaw(event.startTime, event.endTime);
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDivElement>) {
     if (e.target === e.currentTarget) onClose();
