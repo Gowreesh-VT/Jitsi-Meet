@@ -121,8 +121,26 @@ export function isRegistrationClosed(eventTitle: string, startTime: Date | strin
 }
 
 export function getMeetUrl(roomName: string) {
+  let url = roomName.trim();
+  if (url.includes("<iframe") && url.includes("src=")) {
+    const match = url.match(/src=["']([^"']+)["']/);
+    if (match && match[1]) {
+      url = match[1];
+    }
+  }
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
   const server = process.env.NEXT_PUBLIC_JITSI_SERVER || "https://meet.microsoftinnovations.club";
-  return `${server.replace(/\/$/, "")}/${roomName}`;
+  return `${server.replace(/\/$/, "")}/${url}`;
+}
+
+export function formatRoomNameLabel(roomName: string) {
+  const clean = roomName.trim();
+  if (clean.includes("<iframe") || clean.startsWith("http://") || clean.startsWith("https://")) {
+    return "Zoho Meeting";
+  }
+  return clean;
 }
 
 export function generateRoomName(domain: string, type: string, startTime: string | Date) {

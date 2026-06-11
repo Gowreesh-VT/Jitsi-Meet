@@ -10,6 +10,7 @@ export function HomeTour() {
   const [runTour, setRunTour] = useState<boolean>(false);
   const [hasSeenTour, setHasSeenTour] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
+  const [isMeetActive, setIsMeetActive] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -21,6 +22,18 @@ export function HomeTour() {
     }, 0);
 
     return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleMeetChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setIsMeetActive(!!customEvent.detail?.active);
+    };
+
+    window.addEventListener("meet-state-change", handleMeetChange);
+    return () => {
+      window.removeEventListener("meet-state-change", handleMeetChange);
+    };
   }, []);
 
   const handleFinish = useCallback((): void => {
@@ -35,7 +48,7 @@ export function HomeTour() {
     }, 0);
   }, []);
 
-  if (!isReady) {
+  if (!isReady || isMeetActive) {
     return null;
   }
 

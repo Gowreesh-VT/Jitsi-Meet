@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { formatEventWindow, getStatus, type SerializedEvent } from "@/lib/events";
+import { formatEventWindow, getStatus, formatRoomNameLabel, type SerializedEvent } from "@/lib/events";
 
 type Participant = {
   _id: string;
@@ -232,7 +232,7 @@ export function AdminClient({
                       {event.statusOverride !== "auto" ? <Badge variant="secondary">Manual</Badge> : null}
                     </div>
                     <CardTitle>{event.title}</CardTitle>
-                    <CardDescription>{date} · {time} · {event.roomName}</CardDescription>
+                    <CardDescription>{date} · {time} · {formatRoomNameLabel(event.roomName)}</CardDescription>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <Button variant="outline" size="sm" onClick={() => {
