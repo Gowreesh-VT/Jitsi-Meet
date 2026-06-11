@@ -21,7 +21,7 @@ export async function GET(
     await connectToDatabase();
     const registration = await Registration.findOne({
       eventId,
-      userEmail: session.user.email,
+      userId: session.user.id,
     });
 
     if (!registration) {
@@ -51,7 +51,7 @@ export async function POST(
     await connectToDatabase();
     const registration = await Registration.findOne({
       eventId,
-      userEmail: session.user.email,
+      userId: session.user.id,
     });
 
     if (!registration) {
