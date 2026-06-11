@@ -11,6 +11,7 @@ import { SymbolIcon } from "@/components/event-cards";
 import { DOMAINS, getMeetUrl, getStatus, isRegistrationClosed, getISTParts, type Domain, type SerializedEvent } from "@/lib/events";
 import { useSession, signIn } from "next-auth/react";
 import { toast } from "sonner";
+import { MeetEmbed } from "./MeetEmbed";
 
 type Accent = "blue" | "green" | "red" | "yellow";
 type PosterEvent = SerializedEvent & { posterUrl?: string };
@@ -98,6 +99,7 @@ export function ScheduleClient({
   const [filter, setFilter] = React.useState<string>("All");
   const [eventStatuses, setEventStatuses] = React.useState<Record<string, EventStatusData>>({});
   const [savedProfile, setSavedProfile] = React.useState<SavedProfile | null>(null);
+  const [activeMeet, setActiveMeet] = React.useState<{ eventId: string; meetUrl: string } | null>(null);
   const { data: session } = useSession();
 
   React.useEffect(() => {
@@ -170,7 +172,7 @@ export function ScheduleClient({
 
     // If we get here, it's joinable
     const meetUrl = getMeetUrl(event.roomName);
-    window.open(meetUrl, '_blank');
+    setActiveMeet({ eventId: event._id, meetUrl });
 
     try {
       fetch(`/api/events/${event._id}/meet/join`, { method: "POST" }).catch(console.error);
@@ -246,6 +248,20 @@ export function ScheduleClient({
           onClose={() => {
             setSelectedEvent(null);
             setShowRegister(false);
+          }}
+        />
+      ) : null}
+
+      {activeMeet ? (
+        <MeetEmbed
+          embedUrl={activeMeet.meetUrl}
+          onLeave={async () => {
+            try {
+              await fetch(`/api/events/${activeMeet.eventId}/meet/leave`, { method: "POST" });
+            } catch (error) {
+              console.error("Failed to log leave", error);
+            }
+            setActiveMeet(null);
           }}
         />
       ) : null}

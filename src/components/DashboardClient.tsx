@@ -6,6 +6,7 @@ import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatEventWindow, getMeetUrl, getStatus, type SerializedEvent, type Domain } from "@/lib/events";
+import { MeetEmbed } from "./MeetEmbed";
 
 type EventStatusData = {
   isLive: boolean;
@@ -39,10 +40,12 @@ function DashboardSection({
   title,
   list,
   statuses,
+  onJoin,
 }: {
   title: string;
   list: SerializedEvent[];
   statuses: Record<string, EventStatusData>;
+  onJoin: (event: SerializedEvent) => void;
 }) {
   if (list.length === 0) return null;
 
@@ -81,10 +84,8 @@ function DashboardSection({
               </div>
               <div className="event-card__footer mt-6">
                 {status === "Live" && isMeetOpen ? (
-                  <Button asChild className="w-full gap-2 font-black tracking-widest" style={{ background: colors.border, color: meta.accent === "yellow" ? "#1a0e00" : "#000", border: "none" }}>
-                    <a href={getMeetUrl(event.roomName)} target="_blank" rel="noreferrer">
-                      JOIN MEET <ExternalLink className="h-4 w-4" />
-                    </a>
+                  <Button onClick={() => onJoin(event)} className="w-full gap-2 font-black tracking-widest" style={{ background: colors.border, color: meta.accent === "yellow" ? "#1a0e00" : "#000", border: "none" }}>
+                    JOIN MEET <ExternalLink className="h-4 w-4" />
                   </Button>
                 ) : (
                   <Button asChild variant="outline" className="w-full font-black tracking-widest hover:text-white" style={{ borderColor: colors.border, color: colors.border }}>
@@ -102,6 +103,13 @@ function DashboardSection({
 
 export default function DashboardClient({ initialEvents }: { initialEvents: SerializedEvent[] }) {
   const [statuses, setStatuses] = React.useState<Record<string, EventStatusData>>({});
+  const [activeMeet, setActiveMeet] = React.useState<{ eventId: string; meetUrl: string } | null>(null);
+
+  const handleJoin = React.useCallback((event: SerializedEvent) => {
+    const meetUrl = getMeetUrl(event.roomName);
+    setActiveMeet({ eventId: event._id, meetUrl });
+    fetch(`/api/events/${event._id}/meet/join`, { method: "POST" }).catch(console.error);
+  }, []);
 
   const fetchStatus = React.useCallback(async (eventId: string) => {
     try {
@@ -129,17 +137,34 @@ export default function DashboardClient({ initialEvents }: { initialEvents: Seri
         title="LIVE"
         list={initialEvents.filter((event) => getStatus(event.startTime, event.endTime, event.statusOverride) === "Live")}
         statuses={statuses}
+        onJoin={handleJoin}
       />
       <DashboardSection
         title="UPCOMING"
         list={initialEvents.filter((event) => getStatus(event.startTime, event.endTime, event.statusOverride) === "Upcoming")}
         statuses={statuses}
+        onJoin={handleJoin}
       />
       <DashboardSection
         title="PAST"
         list={initialEvents.filter((event) => getStatus(event.startTime, event.endTime, event.statusOverride) === "Ended")}
         statuses={statuses}
+        onJoin={handleJoin}
       />
+
+      {activeMeet ? (
+        <MeetEmbed
+          embedUrl={activeMeet.meetUrl}
+          onLeave={async () => {
+            try {
+              await fetch(`/api/events/${activeMeet.eventId}/meet/leave`, { method: "POST" });
+            } catch (error) {
+              console.error("Failed to log leave", error);
+            }
+            setActiveMeet(null);
+          }}
+        />
+      ) : null}
     </div>
   );
 }

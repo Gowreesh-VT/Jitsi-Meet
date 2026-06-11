@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { isValidObjectId } from "mongoose";
 import { Calendar, Clock, ExternalLink, Timer, UserPlus } from "lucide-react";
 import { RegisterDialogLauncher } from "@/components/RegisterDialogLauncher";
+import { JoinMeetButton } from "@/components/JoinMeetButton";
 import { StartsSoonBanner } from "@/components/StartsSoonBanner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -132,11 +133,7 @@ export default async function EventDetailPage({ params }: PageProps) {
                   WAITING FOR ORGANIZER...
                 </Button>
               ) : (
-                <Button asChild className="w-full join-now-button">
-                  <a href={getMeetUrl(event.roomName)} target="_blank" rel="noreferrer">
-                    JOIN MEET <ExternalLink className="h-4 w-4" />
-                  </a>
-                </Button>
+                <JoinMeetButton eventId={event._id} roomName={event.roomName} />
               )}
               {!isRegistered && status === "Live" ? <p className="text-xs text-arcade-muted">Meet access appears after registration and only while the event is live.</p> : null}
             </div>
