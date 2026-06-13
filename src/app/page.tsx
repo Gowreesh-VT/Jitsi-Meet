@@ -688,7 +688,7 @@ const faqs: FaqItem[] = [
   {
     question: "Can I participate in hackathons alone or do I need a team?",
     answer: 
-        "You can join with a pre-formed team or register solo. We host team-building sessions before hackathons to help you find teammates.",
+        "You can join with a pre-formed team (ArcNight) or register solo (Vibeathon Only). We host team-building sessions before hackathons to help you find teammates.",
     accent: "green",
   },
 ];
