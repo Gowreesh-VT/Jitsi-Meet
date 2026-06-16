@@ -175,7 +175,7 @@ export default async function LandingPage() {
                   <p className="text-[10px] font-black uppercase tracking-[0.35em] text-white/70 sm:text-xs sm:tracking-[0.5em]">Official Sponsors</p>
                   <span className="h-px w-16 bg-white/20 sm:w-10" />
                 </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   {[
                     {
                       name: "HackerRank",
