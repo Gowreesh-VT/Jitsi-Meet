@@ -932,3 +932,18 @@ body {
   animation-play-state: paused;
 }
 
+@keyframes mlsa-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 16px rgba(0, 164, 239, 0.25), inset 0 0 8px rgba(0, 120, 212, 0.15);
+    border-color: #0078d4 !important;
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(0, 164, 239, 0.6), inset 0 0 16px rgba(0, 164, 239, 0.3);
+    border-color: #00a4ef !important;
+  }
+}
+
+.schedule-retro .mlsa-glow-card {
+  animation: mlsa-glow-pulse 2.5s ease-in-out infinite !important;
+}
+

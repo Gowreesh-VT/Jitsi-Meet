@@ -25,6 +25,7 @@ export const domainMeta: Record<Domain, { label: string; accent: string }> = {
   CyberSec: { label: "Cyber Security", accent: "purple" },
   Dev: { label: "Software Development", accent: "blue" },
   Hackathon: { label: "Hackathons", accent: "green" },
+  MLSA: { label: "Microsoft Learn Student Ambassadors", accent: "blue" },
 };
 
 export const accentColors: Record<string, { border: string; text: string; tag: string; heading: string; glow: string }> = {

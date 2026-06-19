@@ -1,4 +1,4 @@
-export const DOMAINS = ["AI/ML", "CP", "UI/UX", "CyberSec", "Dev", "Hackathon"] as const;
+export const DOMAINS = ["AI/ML", "CP", "UI/UX", "CyberSec", "MLSA", "Dev", "Hackathon"] as const;
 export const EVENT_TYPES = ["session", "hackathon"] as const;
 
 export type Domain = (typeof DOMAINS)[number];

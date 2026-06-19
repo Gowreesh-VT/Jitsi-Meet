@@ -30,6 +30,7 @@ const domainMeta: Record<Domain, { label: string; accent: Accent; icon: string; 
   CyberSec: { label: "Cybersecurity", accent: "red", icon: "shield", metaIcon: "terminal" },
   Dev: { label: "Development", accent: "blue", icon: "code", metaIcon: "database" },
   Hackathon: { label: "Hackathons", accent: "yellow", icon: "military_tech", metaIcon: "emoji_events" },
+  MLSA: { label: "MLSA", accent: "blue", icon: "microsoft", metaIcon: "bolt" },
 };
 
 const coordinatorDirectory: Record<Domain, { name: string; phone: string }[]> = {
@@ -56,6 +57,9 @@ const coordinatorDirectory: Record<Domain, { name: string; phone: string }[]> = 
   Hackathon: [
     { name: "Gouse Moideen", phone: "+91 86376 33305" },
     { name: "Tarang Gupta", phone: "+91 62063 05176" },
+  ],
+  MLSA: [
+    { name: "Vansh Aggarwal", phone: "+91 90681 77758" },
   ],
 };
 
@@ -458,13 +462,16 @@ function CategoryBlock({
         <h3 className="text-xl font-black uppercase tracking-[0.2em]" style={{ color: colors.heading }}>{meta.label}</h3>
       </div>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        {events.map((event) => (
-          event.type === "hackathon" ? (
+        {events.map((event) => {
+          if (event.domain === "MLSA") {
+            return <MLSAEventCard key={event._id} event={event} onCardClick={onCardClick} />;
+          }
+          return event.type === "hackathon" ? (
             <HackathonEventCard key={event._id} event={event} onCardClick={onCardClick} />
           ) : (
             <RetroEventCard key={event._id} event={event} onCardClick={onCardClick} />
-          )
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -581,6 +588,117 @@ function HackathonEventCard({ event, onCardClick }: { event: SerializedEvent; on
       <div className="mt-4 rounded-md bg-white/5 p-3 text-xs font-bold text-arcade-muted">
         <div className="flex items-center gap-2"><Calendar className="h-3 w-3" /> {date}</div>
         <div className="mt-2 flex items-center gap-2"><Video className="h-3 w-3" /> {time}</div>
+      </div>
+    </button>
+  );
+}
+
+function MLSAEventCard({
+  event,
+  onCardClick,
+  isEnded,
+}: {
+  event: SerializedEvent;
+  onCardClick: (event: SerializedEvent) => void;
+  isEnded?: boolean;
+}) {
+  const meta = domainMeta[event.domain];
+  const { date, time } = formatEventWindowRaw(event.startTime, event.endTime);
+
+  return (
+    <button
+      type="button"
+      onClick={() => onCardClick(event)}
+      className="retro-event-card mlsa-glow-card w-full text-left"
+      style={{
+        background: "rgba(18, 19, 27, 0.95)",
+        border: "2px solid #0078d4",
+        borderRadius: "8px",
+        padding: "22px",
+        minHeight: "220px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        cursor: "pointer",
+        transition: "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease",
+        position: "relative",
+        overflow: "hidden",
+        color: "var(--arcade-foreground)",
+        opacity: isEnded ? 0.45 : 1,
+        filter: isEnded ? "grayscale(1) brightness(0.8)" : "none",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-4px)";
+        e.currentTarget.style.boxShadow = "0 0 28px rgba(0, 120, 212, 0.35)";
+        e.currentTarget.style.borderColor = "#00a4ef";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.borderColor = "#0078d4";
+      }}
+    >
+      <span
+        style={{
+          position: "absolute",
+          top: "18px",
+          right: "-38px",
+          background: "linear-gradient(135deg, #0078d4, #00a4ef)",
+          color: "white",
+          fontSize: "0.62rem",
+          fontWeight: 800,
+          padding: "4px 44px",
+          transform: "rotate(35deg)",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+        }}
+      >
+        MLSA Exclusive
+      </span>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+        <span
+          className="tag"
+          style={{
+            fontSize: "0.68rem",
+            fontWeight: 800,
+            padding: "4px 8px",
+            border: "1px solid #00a4ef",
+            color: "#00a4ef",
+            textTransform: "uppercase",
+            background: "rgba(0, 164, 239, 0.1)",
+          }}
+        >
+          {event.type === "hackathon" ? "Hackathon" : "Workshop"}
+        </span>
+        <SymbolIcon name={meta.icon} style={{ width: "1.2em", height: "1.2em" }} />
+      </div>
+      {isEnded ? <CompletedStamp /> : null}
+      <div style={{ flex: 1 }}>
+        <p
+          style={{
+            fontFamily: "monospace",
+            fontWeight: 800,
+            fontSize: "1.15rem",
+            lineHeight: 1.2,
+            marginBottom: "10px",
+            textTransform: "uppercase",
+            letterSpacing: "0.03em",
+            color: "#00a4ef",
+          }}
+        >
+          {event.title}
+        </p>
+        <p style={{ color: "var(--arcade-muted)", fontSize: "0.88rem", lineHeight: 1.55 }}>{event.description}</p>
+      </div>
+      <div className="mt-4 rounded-md bg-white/5 p-3 text-xs font-bold text-[#ddbecb]">
+        <div className="flex items-center gap-2"><Calendar className="h-3 w-3 text-[#00a4ef]" /> {date}</div>
+        <div className="mt-2 flex items-center gap-2"><Video className="h-3 w-3 text-[#00a4ef]" /> {time}</div>
+        {!isEnded ? <div className="mt-3 text-white">Starts in <CountdownTimer target={event.startTime} compact /></div> : null}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(255,255,255,0.08)", marginTop: "18px", paddingTop: "12px", color: "var(--arcade-muted)", fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.12em" }}>
+        <span>{meta.label}</span>
+        <SymbolIcon name={meta.metaIcon} className="text-[#00a4ef]" style={{ width: "1.2em", height: "1.2em" }} />
       </div>
     </button>
   );

@@ -49,6 +49,7 @@ export async function GET(request: Request) {
       "CyberSec": 0,
       "Dev": 0,
       "Hackathon": 0,
+      "MLSA": 0,
     };
 
     const institutionBreakdown: Record<string, number> = {

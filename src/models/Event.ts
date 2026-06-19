@@ -3,7 +3,7 @@ import mongoose, { Schema, type InferSchemaType, type Model } from "mongoose";
 const EventSchema = new Schema({
   title: { type: String, required: true, trim: true },
   description: { type: String, required: true, trim: true },
-  domain: { type: String, enum: ["AI/ML", "CP", "UI/UX", "CyberSec", "Dev", "Hackathon"], required: true },
+  domain: { type: String, enum: ["AI/ML", "CP", "UI/UX", "CyberSec", "Dev", "Hackathon", "MLSA"], required: true },
   type: { type: String, enum: ["session", "hackathon"], required: true },
   startTime: { type: Date, required: true },
   endTime: { type: Date, required: true },

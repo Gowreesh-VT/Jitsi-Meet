@@ -114,6 +114,14 @@ export function SymbolIcon({
         <path d="M8 10V7a4 4 0 0 1 8 0v3" />
       </>
     ),
+    microsoft: (
+      <g stroke="none">
+        <rect x="3" y="3" width="8" height="8" fill="#f25022" />
+        <rect x="13" y="3" width="8" height="8" fill="#7fba00" />
+        <rect x="3" y="13" width="8" height="8" fill="#00a4ef" />
+        <rect x="13" y="13" width="8" height="8" fill="#ffb900" />
+      </g>
+    ),
     military_tech: (
       <>
         <path d="M8 3h8l-2 7h-4L8 3z" />
