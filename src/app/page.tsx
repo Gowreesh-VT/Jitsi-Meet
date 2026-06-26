@@ -502,7 +502,7 @@ const organizers = [
     accent: "from-blue-500/20 via-blue-500/5 to-transparent",
   },
   {
-    name: "Akansha",
+    name: "Akanksha",
     role: "Events Head",
     linkedin: "https://www.linkedin.com/in/akanksha-kulkarni-013325256",
     photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEuNsZGPz4GRJyS3pjE8dT6PNtDZVeIqY7LOAF",
@@ -520,6 +520,13 @@ const organizers = [
     role: "Publicity Head",
     linkedin: "https://www.linkedin.com/in/ahmed-sajjad-shihab",
     photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKErsUjjionT9jgs5WpEKi34UvaDCyhSeY1McxP",
+    accent: "from-orange-500/20 via-orange-500/5 to-transparent",
+  },
+  {
+    name: "Tarang",
+    role: "Project Head",
+    linkedin: "https://linkedin.com/in/tarang-gupta-9b7b27322",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEHSYxdZ1ltk8sCVhvgKTpUzQyXnafuj70O5i4",
     accent: "from-orange-500/20 via-orange-500/5 to-transparent",
   },
   {
@@ -600,6 +607,13 @@ const organizers = [
     accent: "from-yellow-500/20 via-yellow-500/5 to-transparent",
   },
   {
+    name: "Vardaa Maheshwari",
+    role: "Entrepreneurship Lead",
+    linkedin: "https://www.linkedin.com/in/vardaa-maheshwari",
+    photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKE2B32UcgYcRAmMyfEpLrHOuvq6PXtIDkh8CKT",
+    accent: "from-rose-500/20 via-rose-500/5 to-transparent",
+  },
+  {
     name: "Humaira",
     role: "Social Media & Content Lead",
     linkedin: "https://www.linkedin.com/in/humaira-aisha-u-435b98382",
@@ -616,14 +630,14 @@ const organizers = [
   {
     name: "Suhani",
     role: "Management Lead",
-    linkedin: "https://www.linkedin.com/in/suhani-jain-64bb60363?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+    linkedin: "https://www.linkedin.com/in/suhani-jain-64bb60363",
     photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKECWEPkHeJaBN8xfuV7iYTPHK3QA0SXWp2tUhv",
     accent: "from-sky-500/20 via-sky-500/5 to-transparent",
   },
     {
     name: "Meera",
     role: "Design Lead",
-    linkedin: "https://www.linkedin.com/in/meera-sujith-686ba1379?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+    linkedin: "https://www.linkedin.com/in/meera-sujith-686ba1379",
     photo: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEOSinyiWot5fUOEcXdyaZNTrPYb7MSJQIlwzH",
     accent: "from-fuchsia-500/20 via-fuchsia-500/5 to-transparent",
   },
