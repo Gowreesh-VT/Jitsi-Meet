@@ -1,74 +1,110 @@
-# Workshop Certificate Generation & Upload Instructions
+# Automated Certificate Generation & Grouped Google Apps Script Email System
 
-This guide outlines the steps to validate participants, generate PDF certificates from the template, upload them to Cloudinary, and synchronize the links to MongoDB.
-
----
-
-## Prerequisites
-
-1. **Environment Variables**:
-   Ensure `.env.local` in the root directory contains the correct MongoDB and Cloudinary credentials:
-   ```env
-   MONGODB_URI=your-mongodb-connection-string
-   CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
-   CLOUDINARY_API_KEY=your-cloudinary-api-key
-   CLOUDINARY_API_SECRET=your-cloudinary-api-secret
-   ```
-
-2. **Required Assets**:
-   - **Template**: Place the certificate background image in `public/templates/Google.jpg`.
-   - **Fonts**: Make sure the TrueType fonts are located in `public/fonts/` (specifically `NotoSans-Regular.ttf` and `NotoSansTamil-Regular.ttf`).
-   - **Participants CSV**: Make sure the target spreadsheet is saved at the root as `participants.csv` with the following headers:
-     `name,email,event_name,event_code,event_type,date`
+Production-ready certificate system that reads participant attendance data (`all_events_attended_participants.csv`), generates high-resolution PDF certificates locally, groups certificates by participant email, and dispatches **a single email per participant with all their certificates attached** via Google Apps Script.
 
 ---
 
-## Execution Steps
+## 📁 Required Directory & File Structure
 
-Run the following scripts sequentially from the project root:
+Ensure your project contains the following directory layout:
 
-### Step 1: Validate CSV & Generate IDs
-Reads `participants.csv`, validates columns/dates, detects duplicate entries, generates sequence-padded `cert_id`s (e.g. `MC26-WS01-0001`), and outputs the clean list.
-```bash
-node scripts/certificate-system/1-validate-participants.mjs
-```
-*Output: Generates `validated_participants.csv`.*
-
-### Step 2: Generate PDF Certificates
-Reads `validated_participants.csv`, loads the `Google.jpg` template, overlays text details (name, event, date, signature, venue) directly onto the coordinate-aligned lines, generates verification QR codes, and builds landscape PDFs.
-```bash
-node scripts/certificate-system/2-generate-pdfs.mjs
-```
-*Outputs: Generates PDFs in `output/` and copies them to `public/certificates/` for local previewing.*
-
-### Step 3: Upload to Cloudinary & Sync MongoDB
-Connects to MongoDB and uploads the generated PDFs to Cloudinary under folder `microcraft-certs` as `image` resource types (enabling browser-native PDF previewing). Then, upserts the record into the database.
-```bash
-node scripts/certificate-system/3-upload-certificates.mjs
+```text
+Jitsi-Meet/
+├── all_events_attended_participants.csv   # Target participant CSV dataset
+├── public/
+│   ├── templates/
+│   │   └── Google.jpg                     # Canva certificate template (exported as JPG/PNG)
+│   └── fonts/
+│       ├── NotoSans-Regular.ttf           # Primary font
+│       └── NotoSansTamil-Regular.ttf      # Tamil script support font (optional)
+├── scripts/
+│   └── certificate-system/
+│       ├── 1-generate-certificates.mjs    # Script 1: Node.js PDF Certificate Generator
+│       ├── 2-send-grouped-certificates.mjs# Script 2 (Runner): Local dispatch runner
+│       └── gas-email-sender.js            # Script 2 (GAS): Google Apps Script backend code
+└── output/                                # Created automatically
+    └── generated_certificates/
+        ├── <Event Title 1>/
+        │   └── participant@email.com_Name.pdf
+        ├── <Event Title 2>/
+        │   └── participant@email.com_Name.pdf
+        ├── certificates_index.json        # Index mapping recipient emails to their PDF files
+        └── dispatch_summary.json          # Detailed delivery report
 ```
 
 ---
 
-## Useful Command Flags & Testing
+## 🛠️ Prerequisites & Dependencies
 
-### Force Re-upload (Database Overwrite)
-By default, the uploader is idempotent and will skip certificates already synced. To force-overwrite existing DB records and re-upload files:
+### Node.js Dependencies
+Installed via `npm`:
 ```bash
-node scripts/certificate-system/3-upload-certificates.mjs --force
+npm install pdf-lib @pdf-lib/fontkit
 ```
 
-### Local Offline Testing (Mock Mode)
-To test the pipeline offline without actual Cloudinary uploads, run the uploader with the `--mock` flag. This will save local static paths (`/certificates/{cert_id}.pdf`) to the database so you can preview files on `localhost`:
+### Background Template (Canva)
+1. Open your Canva design: `https://www.canva.com/design/DAHMpYuuKiM/ywpoTep9hmyokHioR-IyPw/edit`
+2. Click **Share** -> **Download**.
+3. Choose File Type: **PNG** or **JPG** (High Quality).
+4. Save the downloaded image as `public/templates/Google.jpg`.
+
+---
+
+## 🚀 Setup Steps & Execution Guide
+
+### Step 1: Generate PDF Certificates Locally (Script 1)
+
+Reads `all_events_attended_participants.csv`, overlays participant names and event titles onto the Canva certificate template using `pdf-lib`, and organizes generated PDFs into folders by **Event Title**.
+
+Run command:
 ```bash
-node scripts/certificate-system/3-upload-certificates.mjs --force --mock
+node scripts/certificate-system/1-generate-certificates.mjs
+```
+
+**Output**:
+- PDFs saved under `./output/generated_certificates/<Event_Title>/`.
+- JSON index generated at `./output/generated_certificates/certificates_index.json`.
+
+---
+
+### Step 2: Set Up Google Apps Script Web App (Script 2 Backend)
+
+1. Open [script.google.com](https://script.google.com) and click **New Project**.
+2. Replace all existing code in `Code.gs` with the contents of [scripts/certificate-system/gas-email-sender.js](file:///c:/Users/sunda/Jitsi-Meet/scripts/certificate-system/gas-email-sender.js).
+3. Click **Deploy** -> **New Deployment**.
+4. Click the gear icon next to "Select type" and choose **Web app**.
+5. Configure deployment settings:
+   - **Description**: Certificate Dispatcher API
+   - **Execute as**: `Me (your email address)`
+   - **Who has access**: `Anyone`
+6. Click **Deploy** and authorize Gmail permissions when prompted.
+7. Copy the generated **Web App URL** (e.g. `https://script.google.com/macros/s/AKfycb.../exec`).
+
+---
+
+### Step 3: Send Grouped Emails (Script 2 Runner)
+
+Reads `certificates_index.json`, groups all certificates belonging to each email address, and sends **only one email per participant** with all relevant certificates attached.
+
+Add your Web App URL to `.env.local`:
+```env
+GAS_WEB_APP_URL=https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_ID/exec
+```
+
+Run command:
+```bash
+node scripts/certificate-system/2-send-grouped-certificates.mjs
+```
+
+Or pass the URL directly via CLI argument:
+```bash
+node scripts/certificate-system/2-send-grouped-certificates.mjs --gas-url https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_ID/exec
 ```
 
 ---
 
-## Troubleshooting
+## 📌 Verification & Features
 
-- **401 Unauthorized from Cloudinary**: If the generated PDF link returns a 401, log into your Cloudinary Dashboard, go to **Settings** -> **Security** -> **Restricted Media Types**, and uncheck **PDF** (or enable **PDF and ZIP files delivery**).
-- **Stale Dynamic Types**: If Next.js server fails to compile due to route parameter types, clear the build cache and check using:
-  ```bash
-  rm -rf .next && npx tsc --noEmit
-  ```
+- **Single Email Guarantee**: Grouping logic ensures recipients who attended 1, 2, or more events receive **exactly 1 email** containing all their earned certificates.
+- **Dynamic Subject & Body**: Customized email content depending on whether 1 or multiple events were attended.
+- **Delivery Log**: Detailed results (success/failure per recipient) are saved to `./output/dispatch_summary.json`.
