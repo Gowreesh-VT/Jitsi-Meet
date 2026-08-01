@@ -1,6 +1,6 @@
 /**
  * Script 1: Superfast Dual Certificate Generation Pipeline (MIC + HackerRank)
- * Includes complete 5-line HackerRank text layout (Shifted up 5px).
+ * Includes complete 5-line HackerRank text layout (Shifted up an additional 8px).
  */
 
 import fs from 'fs';
@@ -214,7 +214,7 @@ async function generateDualCertificates() {
         const micBytes = await micDoc.save();
         fs.writeFileSync(micPdfPath, micBytes);
 
-        // --- 2. GENERATE HACKERRANK CERTIFICATE (SHIFTED UP 5px) ---
+        // --- 2. GENERATE HACKERRANK CERTIFICATE (SHIFTED UP ADDITIONAL 8px) ---
         const hrDoc = await PDFDocument.create();
         const [copiedHrPage] = await hrDoc.copyPages(baseHrDoc, [0]);
         const hrPage = hrDoc.addPage(copiedHrPage);
@@ -224,7 +224,7 @@ async function generateDualCertificates() {
         const textFontHr = await hrDoc.embedFont(StandardFonts.Helvetica);
 
         // Blank out text region cleanly inside center box
-        hrPage.drawRectangle({ x: 210, y: 217, width: 420, height: 136, color: rgb(1, 1, 1) });
+        hrPage.drawRectangle({ x: 210, y: 225, width: 420, height: 136, color: rgb(1, 1, 1) });
 
         // Line 1: "This participation certificate is given to"
         const sub1Text = "This participation certificate is given to";
@@ -232,7 +232,7 @@ async function generateDualCertificates() {
         const sub1Width = textFontHr.widthOfTextAtSize(sub1Text, fontSizeSub1);
         hrPage.drawText(sub1Text, {
           x: (hrW - sub1Width) / 2,
-          y: 343,
+          y: 351,
           size: fontSizeSub1,
           font: textFontHr,
           color: rgb(0.22, 0.22, 0.22),
@@ -243,7 +243,7 @@ async function generateDualCertificates() {
         const nameWidthHr = nameFontHr.widthOfTextAtSize(participantName, fontSizeNameHr);
         hrPage.drawText(participantName, {
           x: (hrW - nameWidthHr) / 2,
-          y: 308,
+          y: 316,
           size: fontSizeNameHr,
           font: nameFontHr,
           color: rgb(0.05, 0.05, 0.05),
@@ -255,7 +255,7 @@ async function generateDualCertificates() {
         const sub2Width = textFontHr.widthOfTextAtSize(sub2Text, fontSizeSub2);
         hrPage.drawText(sub2Text, {
           x: (hrW - sub2Width) / 2,
-          y: 278,
+          y: 286,
           size: fontSizeSub2,
           font: textFontHr,
           color: rgb(0.22, 0.22, 0.22),
@@ -266,7 +266,7 @@ async function generateDualCertificates() {
         const eventWidthHr = nameFontHr.widthOfTextAtSize(eventTitle, fontSizeEventHr);
         hrPage.drawText(eventTitle, {
           x: (hrW - eventWidthHr) / 2,
-          y: 248,
+          y: 256,
           size: fontSizeEventHr,
           font: nameFontHr,
           color: rgb(0.05, 0.05, 0.05),
@@ -278,7 +278,7 @@ async function generateDualCertificates() {
         const dateWidthHr = textFontHr.widthOfTextAtSize(fullDateText, fontSizeDateHr);
         hrPage.drawText(fullDateText, {
           x: (hrW - dateWidthHr) / 2,
-          y: 223,
+          y: 231,
           size: fontSizeDateHr,
           font: textFontHr,
           color: rgb(0.3, 0.3, 0.3),

@@ -1,6 +1,6 @@
 /**
- * Test Single HackerRank Certificate Generator (Shifted Up 5px)
- * Shifts all 5 text lines up by 5px.
+ * Test Single HackerRank Certificate Generator (Shifted Up Additional 8px)
+ * Shifts all 5 text lines up by an additional 8px (+13px total).
  */
 
 import fs from 'fs';
@@ -11,7 +11,7 @@ const TEMPLATE_HR_PATH = path.resolve('public/templates/hackerrank_certificate_t
 const OUTPUT_PDF = path.resolve('output/test_single_hackerrank.pdf');
 
 async function testSingleCertificate() {
-  console.log('=== Generating Single Test HackerRank Certificate (Shifted Up 5px) ===\n');
+  console.log('=== Generating Single Test HackerRank Certificate (Shifted Up +8px) ===\n');
 
   if (!fs.existsSync(TEMPLATE_HR_PATH)) {
     console.error(`Error: Template ${TEMPLATE_HR_PATH} not found.`);
@@ -35,7 +35,7 @@ async function testSingleCertificate() {
   const dateStr = "22/7/2026";
 
   // White rectangle bounds inside center box
-  page.drawRectangle({ x: 210, y: 217, width: 420, height: 136, color: rgb(1, 1, 1) });
+  page.drawRectangle({ x: 210, y: 225, width: 420, height: 136, color: rgb(1, 1, 1) });
 
   // 1. Subtitle 1: "This participation certificate is given to"
   const sub1Text = "This participation certificate is given to";
@@ -43,7 +43,7 @@ async function testSingleCertificate() {
   const sub1Width = regularFont.widthOfTextAtSize(sub1Text, fontSizeSub1);
   page.drawText(sub1Text, {
     x: (pageW - sub1Width) / 2,
-    y: 343,
+    y: 351,
     size: fontSizeSub1,
     font: regularFont,
     color: rgb(0.22, 0.22, 0.22),
@@ -54,7 +54,7 @@ async function testSingleCertificate() {
   const nameWidth = boldFont.widthOfTextAtSize(participantName, fontSizeName);
   page.drawText(participantName, {
     x: (pageW - nameWidth) / 2,
-    y: 308,
+    y: 316,
     size: fontSizeName,
     font: boldFont,
     color: rgb(0.05, 0.05, 0.05),
@@ -66,7 +66,7 @@ async function testSingleCertificate() {
   const sub2Width = regularFont.widthOfTextAtSize(sub2Text, fontSizeSub2);
   page.drawText(sub2Text, {
     x: (pageW - sub2Width) / 2,
-    y: 278,
+    y: 286,
     size: fontSizeSub2,
     font: regularFont,
     color: rgb(0.22, 0.22, 0.22),
@@ -77,7 +77,7 @@ async function testSingleCertificate() {
   const eventWidth = boldFont.widthOfTextAtSize(eventTitle, fontSizeEvent);
   page.drawText(eventTitle, {
     x: (pageW - eventWidth) / 2,
-    y: 248,
+    y: 256,
     size: fontSizeEvent,
     font: boldFont,
     color: rgb(0.05, 0.05, 0.05),
@@ -89,7 +89,7 @@ async function testSingleCertificate() {
   const dateWidth = regularFont.widthOfTextAtSize(dateText, fontSizeDate);
   page.drawText(dateText, {
     x: (pageW - dateWidth) / 2,
-    y: 223,
+    y: 231,
     size: fontSizeDate,
     font: regularFont,
     color: rgb(0.3, 0.3, 0.3),
