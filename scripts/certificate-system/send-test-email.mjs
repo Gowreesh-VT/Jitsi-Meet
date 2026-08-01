@@ -1,6 +1,9 @@
 /**
- * Test Email Dispatcher for 3-Event Participant via ZeptoMail API
- * Sends a test email to gousemoideen1@gmail.com using participant data with 3 events.
+ * Flexible Test Email Dispatcher via ZeptoMail API
+ * 
+ * Usage:
+ *   node scripts/certificate-system/send-test-email.mjs --email gousemoideen2@gmail.com --events 1
+ *   node scripts/certificate-system/send-test-email.mjs --email gousemoideen1@gmail.com --events 3
  */
 
 import fs from 'fs';
@@ -28,16 +31,29 @@ function loadEnv() {
 }
 
 async function sendTestEmail() {
-  console.log('=== Sending Test Email for 3-Event Participant via ZeptoMail ===\n');
-
   loadEnv();
+
+  const args = process.argv.slice(2);
+  let recipientEmail = 'gousemoideen2@gmail.com';
+  let targetEventCount = 1;
+
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--email' && args[i + 1]) {
+      recipientEmail = args[i + 1];
+    }
+    if (args[i] === '--events' && args[i + 1]) {
+      targetEventCount = parseInt(args[i + 1], 10);
+    }
+  }
+
+  const targetCertCount = targetEventCount * 2; // 2 certificates per event
+
+  console.log(`=== Sending Test Email (${targetEventCount} Event(s)) via ZeptoMail ===\n`);
 
   const token = process.env.ZEPTOMAIL_SEND_TOKEN;
   const fromEmail = process.env.ZEPTOMAIL_FROM_EMAIL;
   const fromName = process.env.ZEPTOMAIL_FROM_NAME || 'Microsoft Innovations Club';
   const apiUrl = process.env.ZEPTOMAIL_API_URL || 'https://api.zeptomail.in/v1.1/email';
-
-  const recipientEmail = 'gousemoideen1@gmail.com';
 
   if (!token || !fromEmail) {
     console.error('Error: ZeptoMail credentials missing in .env.local.');
@@ -51,24 +67,24 @@ async function sendTestEmail() {
 
   const indexMap = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf-8'));
 
-  // Find participant with 3 events (6 certificates)
+  // Find participant with exact target event count (2 * targetEventCount certificates)
   let targetParticipant = null;
   for (const email of Object.keys(indexMap)) {
-    if (indexMap[email].certificates.length === 6) {
+    if (indexMap[email].certificates.length === targetCertCount) {
       targetParticipant = indexMap[email];
       break;
     }
   }
 
   if (!targetParticipant) {
-    console.error('Error: No participant found with 3 events.');
+    console.error(`Error: No participant found with exactly ${targetEventCount} event(s).`);
     process.exit(1);
   }
 
   console.log(`Selected Participant Data:`);
   console.log(`- Name: ${targetParticipant.name}`);
   console.log(`- Test Recipient Email: ${recipientEmail}`);
-  console.log(`- Total Certificates: ${targetParticipant.certificates.length} (3 Events x 2 Certificates)\n`);
+  console.log(`- Total Certificates: ${targetParticipant.certificates.length} (${targetEventCount} Event(s) x 2 Certificates)\n`);
 
   // Load HTML template
   if (!fs.existsSync(TEMPLATE_FILE)) {
@@ -127,7 +143,7 @@ async function sendTestEmail() {
     .replace(/{{ATTENDED_COUNT}}/g, String(eventCount))
     .replace(/{{DYNAMIC_CERTIFICATE_CARDS}}/g, eventCardsHtml);
 
-  // Attach all 6 PDF certificates
+  // Attach all PDF certificates
   const attachments = [];
   for (const cert of certList) {
     if (!fs.existsSync(cert.pdfPath)) {
@@ -142,7 +158,9 @@ async function sendTestEmail() {
     });
   }
 
-  const subject = `Your Certificates of Completion (${eventCount} Events Attended) - Summer of Building`;
+  const subject = eventCount === 1
+    ? `Your Certificate of Completion: ${uniqueEventTitles[0]}`
+    : `Your Certificates of Completion (${eventCount} Events Attended) - Summer of Building`;
 
   const authHeader = token.startsWith('Zoho-enczapikey') ? token : `Zoho-enczapikey ${token}`;
 
@@ -158,7 +176,7 @@ async function sendTestEmail() {
     attachments: attachments
   };
 
-  console.log(`Sending email to ${recipientEmail} with ${attachments.length} PDF attachments...`);
+  console.log(`Sending email to ${recipientEmail} with ${attachments.length} PDF attachment(s)...`);
 
   try {
     const response = await fetch(apiUrl, {
