@@ -1,165 +1,104 @@
+/**
+ * Test Single HackerRank Certificate Generator (Shifted Text & Preserved Lines)
+ * Preserves the background grid lines and brackets without overlapping.
+ */
+
 import fs from 'fs';
 import path from 'path';
-import { PDFDocument, rgb } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
-// Template Paths
-const TEMPLATE_PDF_PATHS = [
-  path.resolve('public/templates/certificates (2).pdf'),
-  path.resolve('public/certificates (2).pdf'),
-  path.resolve('public/templates/certificates.pdf'),
-  path.resolve('public/certificates.pdf')
-];
-const FONT_REGULAR_PATH = path.resolve('public/fonts/NotoSans-Regular.ttf');
-const OUTPUT_DIR = path.resolve('output');
-const INDEX_FILE = path.resolve('output/generated_certificates/certificates_index.json');
+const TEMPLATE_HR_PATH = path.resolve('public/templates/hackerrank_certificate_template.png');
+const OUTPUT_PDF = path.resolve('output/test_single_hackerrank.pdf');
 
-/**
- * Add or edit test participants here!
- * - If a participant has multiple entries, each event generates a SEPARATE certificate PDF.
- * - Script 2 automatically groups all certificates for the same email and sends ONE single email containing all PDFs.
- */
-const TEST_DATA = [
-  {
-    name: 'Sri Saidhakshini',
-    email: 'srisaidhakshiniv@gmail.com',
-    workshopTitle: 'Full Stack Blitz',
-    date: '22/7/2026'
-  },
-  {
-    name: 'Sri Saidhakshini',
-    email: 'srisaidhakshiniv@gmail.com',
-    workshopTitle: 'Ethical Hacking Lab',
-    date: '23/7/2026'
-  },
-  {
-    name: 'Gowreesh V T',
-    email: 'vt.gowreesh43@gmail.com',
-    workshopTitle: 'AI UI Sprint',
-    date: '24/7/2026'
-  },
-  {
-    name: 'Gowreesh V T',
-    email: 'vt.gowreesh43@gmail.com',
-    workshopTitle: 'Full Stack Blitz',
-    date: '25/7/2026'
-  }
-];
+async function testSingleCertificate() {
+  console.log('=== Generating Single Test HackerRank Certificate (Preserved Lines) ===\n');
 
-function sanitizeFilename(name) {
-  return name.replace(/[/\\?%*:|"<>]/g, '_').replace(/\s+/g, ' ').trim();
-}
-
-async function createTestCertificates() {
-  console.log(`=== Creating ${TEST_DATA.length} Test Certificate(s) ===\n`);
-
-  let templatePath = TEMPLATE_PDF_PATHS.find(p => fs.existsSync(p));
-  if (!templatePath) {
-    console.error(`Error: Certificate template PDF not found!`);
+  if (!fs.existsSync(TEMPLATE_HR_PATH)) {
+    console.error(`Error: Template ${TEMPLATE_HR_PATH} not found.`);
     process.exit(1);
   }
 
-  console.log(`Using Template: ${templatePath}`);
-  const templateBytes = fs.readFileSync(templatePath);
+  const hrImgBytes = fs.readFileSync(TEMPLATE_HR_PATH);
 
-  if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  const certDir = path.dirname(INDEX_FILE);
-  if (!fs.existsSync(certDir)) fs.mkdirSync(certDir, { recursive: true });
+  const doc = await PDFDocument.create();
+  const page = doc.addPage([841.89, 595.27]);
+  const { width: pageW } = page.getSize();
 
-  const indexMap = {};
+  const bgImg = await doc.embedPng(hrImgBytes);
+  page.drawImage(bgImg, { x: 0, y: 0, width: 841.89, height: 595.27 });
 
-  for (let i = 0; i < TEST_DATA.length; i++) {
-    const item = TEST_DATA[i];
-    const name = item.name || 'Participant';
-    const email = item.email || '';
-    const workshopTitle = item.workshopTitle || item.WorkshopTitle || 'Workshop';
-    const date = item.date || '22/7/2026';
+  const boldFont = await doc.embedFont(StandardFonts.HelveticaBold);
+  const regularFont = await doc.embedFont(StandardFonts.Helvetica);
 
-    const pdfDoc = await PDFDocument.load(templateBytes);
-    pdfDoc.registerFontkit(fontkit);
+  const participantName = "Divya Priya";
+  const eventTitle = "n8n Mail Bot";
+  const dateStr = "22/7/2026";
 
-    let fontRegular = null;
-    if (fs.existsSync(FONT_REGULAR_PATH)) {
-      fontRegular = await pdfDoc.embedFont(fs.readFileSync(FONT_REGULAR_PATH));
-    }
+  // DO NOT draw white rectangle over background lines; only cover text if needed inside safe bounds
+  page.drawRectangle({ x: 210, y: 212, width: 420, height: 136, color: rgb(1, 1, 1) });
 
-    const firstPage = pdfDoc.getPages()[0];
-    const { width } = firstPage.getSize();
+  // 1. Subtitle 1: "This participation certificate is given to"
+  const sub1Text = "This participation certificate is given to";
+  const fontSizeSub1 = 13.5;
+  const sub1Width = regularFont.widthOfTextAtSize(sub1Text, fontSizeSub1);
+  page.drawText(sub1Text, {
+    x: (pageW - sub1Width) / 2,
+    y: 338,
+    size: fontSizeSub1,
+    font: regularFont,
+    color: rgb(0.22, 0.22, 0.22),
+  });
 
-    // 1. Participant Name (Underline 1)
-    const fontSizeName = name.length > 25 ? 24 : 31;
-    const nameWidth = fontRegular ? fontRegular.widthOfTextAtSize(name, fontSizeName) : name.length * 13;
-    firstPage.drawText(name, {
-      x: (width - nameWidth) / 2,
-      y: 305,
-      size: fontSizeName,
-      font: fontRegular || undefined,
-      color: rgb(0.12, 0.12, 0.28),
-    });
+  // 2. Recipient Name: "[RECIPIENT NAME]"
+  const fontSizeName = participantName.length > 25 ? 24 : 30;
+  const nameWidth = boldFont.widthOfTextAtSize(participantName, fontSizeName);
+  page.drawText(participantName, {
+    x: (pageW - nameWidth) / 2,
+    y: 303,
+    size: fontSizeName,
+    font: boldFont,
+    color: rgb(0.05, 0.05, 0.05),
+  });
 
-    // 2. Workshop Title / Event Name (Underline 2)
-    const fontSizeEvent = workshopTitle.length > 30 ? 13 : 15;
-    const eventWidth = fontRegular ? fontRegular.widthOfTextAtSize(workshopTitle, fontSizeEvent) : workshopTitle.length * 7;
-    const line2Center = 182.5;
-    const eventX = Math.max(90, line2Center - (eventWidth / 2));
-    firstPage.drawText(workshopTitle, {
-      x: eventX,
-      y: 245,
-      size: fontSizeEvent,
-      font: fontRegular || undefined,
-      color: rgb(0.12, 0.12, 0.28),
-    });
+  // 3. Subtitle 2: "for actively participating in the"
+  const sub2Text = "for actively participating in the";
+  const fontSizeSub2 = 13.5;
+  const sub2Width = regularFont.widthOfTextAtSize(sub2Text, fontSizeSub2);
+  page.drawText(sub2Text, {
+    x: (pageW - sub2Width) / 2,
+    y: 273,
+    size: fontSizeSub2,
+    font: regularFont,
+    color: rgb(0.22, 0.22, 0.22),
+  });
 
-    // 3. Date (Underline 3)
-    const fontSizeDate = 14;
-    const dateWidth = fontRegular ? fontRegular.widthOfTextAtSize(date, fontSizeDate) : date.length * 7;
-    const line3Center = 152.5;
-    const dateX = Math.max(90, line3Center - (dateWidth / 2));
-    firstPage.drawText(date, {
-      x: dateX,
-      y: 215,
-      size: fontSizeDate,
-      font: fontRegular || undefined,
-      color: rgb(0.12, 0.12, 0.28),
-    });
+  // 4. Event Title: "[EVENT TITLE]"
+  const fontSizeEvent = eventTitle.length > 30 ? 15 : 20;
+  const eventWidth = boldFont.widthOfTextAtSize(eventTitle, fontSizeEvent);
+  page.drawText(eventTitle, {
+    x: (pageW - eventWidth) / 2,
+    y: 243,
+    size: fontSizeEvent,
+    font: boldFont,
+    color: rgb(0.05, 0.05, 0.05),
+  });
 
-    const safeTitle = sanitizeFilename(workshopTitle);
-    const safeName = sanitizeFilename(name);
-    const safeEmail = sanitizeFilename(email.toLowerCase());
+  // 5. Date: "held on [DATE]"
+  const dateText = `held on ${dateStr}`;
+  const fontSizeDate = 12.5;
+  const dateWidth = regularFont.widthOfTextAtSize(dateText, fontSizeDate);
+  page.drawText(dateText, {
+    x: (pageW - dateWidth) / 2,
+    y: 218,
+    size: fontSizeDate,
+    font: regularFont,
+    color: rgb(0.3, 0.3, 0.3),
+  });
 
-    const pdfBytes = await pdfDoc.save();
-    const outputPath = path.join(OUTPUT_DIR, `test_${safeEmail}_${safeTitle}.pdf`);
-    fs.writeFileSync(outputPath, pdfBytes);
+  const pdfBytes = await doc.save();
+  fs.writeFileSync(OUTPUT_PDF, pdfBytes);
 
-    const emailKey = email.toLowerCase();
-    if (!indexMap[emailKey]) {
-      indexMap[emailKey] = {
-        name: name,
-        email: emailKey,
-        certificates: []
-      };
-    }
-
-    indexMap[emailKey].certificates.push({
-      eventTitle: workshopTitle,
-      pdfPath: outputPath,
-      filename: `${safeTitle} - ${safeName}.pdf`
-    });
-
-    console.log(`[${i + 1}/${TEST_DATA.length}] Generated PDF: ${outputPath}`);
-  }
-
-  fs.writeFileSync(INDEX_FILE, JSON.stringify(indexMap, null, 2), 'utf-8');
-
-  console.log(`\n✓ Updated test certificate index: ${INDEX_FILE}`);
-  console.log(`- Unique Recipients: ${Object.keys(indexMap).length}`);
-  for (const [e, info] of Object.entries(indexMap)) {
-    console.log(`  • ${info.name} (${e}): ${info.certificates.length} certificate(s)`);
-  }
-  console.log('\nRun Script 2 to dispatch emails with all grouped certificates attached!\n');
+  console.log(`Saved sample test PDF to: ${OUTPUT_PDF}\n`);
 }
 
-createTestCertificates().catch(err => {
-  console.error('Error generating test certificates:', err);
-  process.exit(1);
-});
+testSingleCertificate().catch(console.error);

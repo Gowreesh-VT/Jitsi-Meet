@@ -1,6 +1,6 @@
 /**
  * Script 1: Superfast Dual Certificate Generation Pipeline (MIC + HackerRank)
- * Pre-embeds background template PNG once and uses copyPages for maximum performance.
+ * Includes complete 5-line HackerRank text layout with preserved background lines.
  */
 
 import fs from 'fs';
@@ -214,7 +214,7 @@ async function generateDualCertificates() {
         const micBytes = await micDoc.save();
         fs.writeFileSync(micPdfPath, micBytes);
 
-        // --- 2. GENERATE HACKERRANK CERTIFICATE ---
+        // --- 2. GENERATE HACKERRANK CERTIFICATE (PRESERVED BACKGROUND LINES) ---
         const hrDoc = await PDFDocument.create();
         const [copiedHrPage] = await hrDoc.copyPages(baseHrDoc, [0]);
         const hrPage = hrDoc.addPage(copiedHrPage);
@@ -223,43 +223,65 @@ async function generateDualCertificates() {
         const nameFontHr = await hrDoc.embedFont(StandardFonts.HelveticaBold);
         const textFontHr = await hrDoc.embedFont(StandardFonts.Helvetica);
 
-        // Blank out placeholder areas with clean white rectangles
-        hrPage.drawRectangle({ x: 180, y: 310, width: 480, height: 50, color: rgb(1, 1, 1) });
-        hrPage.drawRectangle({ x: 180, y: 232, width: 480, height: 35, color: rgb(1, 1, 1) });
-        hrPage.drawRectangle({ x: 250, y: 198, width: 340, height: 25, color: rgb(1, 1, 1) });
+        // Blank out text region cleanly inside center box without touching outer lines or brackets
+        hrPage.drawRectangle({ x: 210, y: 212, width: 420, height: 136, color: rgb(1, 1, 1) });
 
-        // Draw Recipient Name
-        const fontSizeNameHr = participantName.length > 25 ? 26 : 32;
+        // Line 1: "This participation certificate is given to"
+        const sub1Text = "This participation certificate is given to";
+        const fontSizeSub1 = 13.5;
+        const sub1Width = textFontHr.widthOfTextAtSize(sub1Text, fontSizeSub1);
+        hrPage.drawText(sub1Text, {
+          x: (hrW - sub1Width) / 2,
+          y: 338,
+          size: fontSizeSub1,
+          font: textFontHr,
+          color: rgb(0.22, 0.22, 0.22),
+        });
+
+        // Line 2: Recipient Name
+        const fontSizeNameHr = participantName.length > 25 ? 24 : 30;
         const nameWidthHr = nameFontHr.widthOfTextAtSize(participantName, fontSizeNameHr);
         hrPage.drawText(participantName, {
           x: (hrW - nameWidthHr) / 2,
-          y: 322,
+          y: 303,
           size: fontSizeNameHr,
           font: nameFontHr,
           color: rgb(0.05, 0.05, 0.05),
         });
 
-        // Draw Event Title
-        const fontSizeEventHr = eventTitle.length > 30 ? 16 : 20;
+        // Line 3: "for actively participating in the"
+        const sub2Text = "for actively participating in the";
+        const fontSizeSub2 = 13.5;
+        const sub2Width = textFontHr.widthOfTextAtSize(sub2Text, fontSizeSub2);
+        hrPage.drawText(sub2Text, {
+          x: (hrW - sub2Width) / 2,
+          y: 273,
+          size: fontSizeSub2,
+          font: textFontHr,
+          color: rgb(0.22, 0.22, 0.22),
+        });
+
+        // Line 4: Event Title
+        const fontSizeEventHr = eventTitle.length > 30 ? 15 : 20;
         const eventWidthHr = nameFontHr.widthOfTextAtSize(eventTitle, fontSizeEventHr);
         hrPage.drawText(eventTitle, {
           x: (hrW - eventWidthHr) / 2,
-          y: 240,
+          y: 243,
           size: fontSizeEventHr,
           font: nameFontHr,
           color: rgb(0.05, 0.05, 0.05),
         });
 
-        // Draw Date
+        // Line 5: Date
         const fullDateText = `held on ${dateStr}`;
-        const fontSizeDateHr = 13;
+        const fontSizeDateHr = 12.5;
         const dateWidthHr = textFontHr.widthOfTextAtSize(fullDateText, fontSizeDateHr);
         hrPage.drawText(fullDateText, {
           x: (hrW - dateWidthHr) / 2,
-          y: 205,
+          y: 218,
           size: fontSizeDateHr,
           font: textFontHr,
-          color: rgb(0.25, 0.25, 0.25),
+          color: rgb(0.3, 0.3, 0.3),
         });
 
         const hrBytes = await hrDoc.save();
