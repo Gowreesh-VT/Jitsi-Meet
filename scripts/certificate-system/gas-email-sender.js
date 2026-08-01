@@ -1,5 +1,5 @@
 /**
- * Script 2: Google Apps Script Email Sender (Production Ready)
+ * Script 2: Google Apps Script Email Sender (Production Ready with HTML Template)
  * 
  * Target: Google Apps Script (https://script.google.com)
  * Function: Receives grouped certificates per recipient and sends a single email with all PDFs attached.
@@ -22,7 +22,7 @@ function doPost(e) {
     }
 
     const payload = JSON.parse(e.postData.contents);
-    const { email, name, certificates } = payload;
+    const { email, name, certificates, htmlbody, subject } = payload;
 
     if (!email || !certificates || !Array.isArray(certificates) || certificates.length === 0) {
       return responseJSON({ status: 'error', message: 'Invalid request. "email" and non-empty "certificates" array required.' }, 400);
@@ -35,44 +35,34 @@ function doPost(e) {
       return Utilities.newBlob(bytes, 'application/pdf', filename);
     });
 
-    // 2. Prepare Subject and Body based on single vs multiple event attendance
-    const eventCount = certificates.length;
-    const eventListText = certificates.map(c => `• ${c.eventTitle}`).join('\n');
+    const emailSubject = subject || `Your Certificates of Completion - Summer of Building`;
 
-    let subject = '';
-    let body = '';
-
-    if (eventCount === 1) {
-      const eventTitle = certificates[0].eventTitle;
-      subject = `Your Certificate of Completion: ${eventTitle}`;
-      body = `Dear ${name || 'Participant'},\n\n` +
-        `Thank you for participating in "${eventTitle}"!\n\n` +
-        `We hope you had an engaging and insightful experience. Please find your official Certificate of Completion attached to this email.\n\n` +
-        `Best regards,\n` +
-        `Event Organizing Team\n` +
-        `Vellore Institute of Technology`;
+    // 2. Send email via GmailApp
+    if (htmlbody) {
+      GmailApp.sendEmail(email, emailSubject, 'Please view this email in an HTML-compatible email client.', {
+        htmlBody: htmlbody,
+        attachments: pdfAttachments,
+        name: 'Microsoft Innovations Club'
+      });
     } else {
-      subject = `Your Certificates of Completion (${eventCount} Events Attended)`;
-      body = `Dear ${name || 'Participant'},\n\n` +
-        `Thank you for participating in our recent events! We appreciate your enthusiasm and active participation.\n\n` +
-        `According to our records, you successfully attended the following ${eventCount} events:\n` +
+      const eventListText = certificates.map(c => `• ${c.eventTitle}`).join('\n');
+      const plainBody = `Dear ${name || 'Participant'},\n\n` +
+        `Thank you for participating in our events!\n\n` +
         `${eventListText}\n\n` +
-        `Please find all ${eventCount} of your official Certificates of Completion attached to this email.\n\n` +
+        `Please find your official Certificates attached.\n\n` +
         `Best regards,\n` +
-        `Event Organizing Team\n` +
-        `Vellore Institute of Technology`;
-    }
+        `Microsoft Innovations Club`;
 
-    // 3. Send single email with all certificate attachments via Gmail API
-    GmailApp.sendEmail(email, subject, body, {
-      attachments: pdfAttachments,
-      name: 'Event Organizing Team'
-    });
+      GmailApp.sendEmail(email, emailSubject, plainBody, {
+        attachments: pdfAttachments,
+        name: 'Microsoft Innovations Club'
+      });
+    }
 
     return responseJSON({
       status: 'success',
       email: email,
-      certificatesSent: eventCount
+      certificatesSent: pdfAttachments.length
     });
 
   } catch (error) {
