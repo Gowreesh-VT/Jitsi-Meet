@@ -107,27 +107,27 @@ function CustomVideoPlayer({ src, activeTab }: CustomVideoPlayerProps) {
       />
 
       {/* Top Badges Overlay */}
-      <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 pointer-events-none">
-        <div className="flex items-center gap-2 bg-black/80 backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-full">
-          <span className="relative flex h-2.5 w-2.5">
+      <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between gap-2 z-10 pointer-events-none">
+        <div className="flex items-center gap-1.5 sm:gap-2 bg-black/80 backdrop-blur-md border border-white/15 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full max-w-[70%] sm:max-w-none">
+          <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5 shrink-0">
             <span
               className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
                 activeTab === "external" ? "bg-[#ffafd5]" : "bg-[#38b6ff]"
               }`}
             />
             <span
-              className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+              className={`relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 ${
                 activeTab === "external" ? "bg-[#ffafd5]" : "bg-[#38b6ff]"
               }`}
             />
           </span>
-          <span className="text-[10px] font-mono font-bold tracking-widest text-white uppercase flex items-center gap-1.5">
-            <Video className="h-3 w-3 text-white/80" />
-            {activeTab === "external" ? "EXTERNAL PARTICIPANT GUIDE" : "INTERNAL PARTICIPANT GUIDE"}
+          <span className="text-[9px] sm:text-[10px] font-mono font-bold tracking-wider sm:tracking-widest text-white uppercase flex items-center gap-1 truncate">
+            <Video className="h-3 w-3 text-white/80 shrink-0" />
+            <span className="truncate">{activeTab === "external" ? "EXTERNAL PARTICIPANT GUIDE" : "INTERNAL PARTICIPANT GUIDE"}</span>
           </span>
         </div>
 
-        <div className="bg-black/80 backdrop-blur-md border border-white/15 px-3 py-1 rounded-md text-[10px] font-mono text-white/80">
+        <div className="bg-black/80 backdrop-blur-md border border-white/15 px-2 py-1 sm:px-3 sm:py-1 rounded-md text-[9px] sm:text-[10px] font-mono text-white/80 shrink-0">
           {formatTime(currentTime)} / {formatTime(duration)}
         </div>
       </div>
@@ -296,11 +296,11 @@ export function CertificateInstructionVideo({
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-white/10 pb-6">
           <div>
-            <div className="flex items-center gap-2 text-[#ffafd5] text-xs font-mono font-bold tracking-widest uppercase mb-1">
-              <Sparkles className="h-4 w-4" />
+            <div className="flex items-center gap-2 text-[#ffafd5] text-[11px] sm:text-xs font-mono font-bold tracking-widest uppercase mb-1">
+              <Sparkles className="h-4 w-4 shrink-0" />
               Certificate Portal & Video Guides
             </div>
-            <h3 className="text-xl md:text-2xl font-black text-white tracking-wide uppercase">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white tracking-wide uppercase leading-snug">
               Registration & Certificate Instruction Videos
             </h3>
             <p className="text-xs md:text-sm text-arcade-muted mt-1 leading-relaxed max-w-2xl">
@@ -308,43 +308,43 @@ export function CertificateInstructionVideo({
             </p>
           </div>
 
-          <div className="shrink-0">
+          <div className="shrink-0 w-full md:w-auto">
             <Button
               asChild
-              className="arcade-btn px-5 py-3 text-xs font-black tracking-widest uppercase flex items-center gap-2 hover:scale-[1.03] transition-transform shadow-[0_0_20px_rgba(249,77,180,0.35)] cursor-pointer"
+              className="arcade-btn w-full md:w-auto px-5 py-3 text-xs font-black tracking-widest uppercase flex items-center justify-center gap-2 hover:scale-[1.03] transition-transform shadow-[0_0_20px_rgba(249,77,180,0.35)] cursor-pointer"
             >
               <a href={registrationUrl} target="_blank" rel="noopener noreferrer">
-                VIT EVENT HUB PORTAL <ExternalLink className="h-4 w-4" />
+                VIT EVENT HUB PORTAL <ExternalLink className="h-4 w-4 shrink-0" />
               </a>
             </Button>
           </div>
         </div>
 
         {/* Video Selector Tabs */}
-        <div className="flex items-center justify-between gap-3 mb-6 bg-black/50 p-1.5 rounded-2xl border border-white/10">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 mb-6 bg-black/50 p-1.5 rounded-2xl border border-white/10">
           <button
             type="button"
             onClick={() => setActiveTab("external")}
-            className={`flex-1 py-3 px-4 rounded-xl font-black text-xs md:text-sm tracking-wider uppercase transition-all flex items-center justify-center gap-2.5 cursor-pointer ${
+            className={`flex-1 py-2.5 px-3 sm:py-3 sm:px-4 rounded-xl font-black text-[11px] sm:text-xs md:text-sm tracking-tight sm:tracking-wider uppercase transition-all flex items-center justify-center text-center gap-2 cursor-pointer ${
               activeTab === "external"
                 ? "bg-gradient-to-r from-[#ffafd5]/25 to-[#ffafd5]/10 text-[#ffafd5] border border-[#ffafd5]/50 shadow-[0_0_20px_rgba(255,175,213,0.2)]"
                 : "text-arcade-muted hover:text-white border border-transparent hover:bg-white/5"
             }`}
           >
-            <UserCheck className={`h-4 w-4 ${activeTab === "external" ? "text-[#ffafd5]" : ""}`} />
+            <UserCheck className={`h-4 w-4 shrink-0 ${activeTab === "external" ? "text-[#ffafd5]" : ""}`} />
             <span>External Participant Video</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("internal")}
-            className={`flex-1 py-3 px-4 rounded-xl font-black text-xs md:text-sm tracking-wider uppercase transition-all flex items-center justify-center gap-2.5 cursor-pointer ${
+            className={`flex-1 py-2.5 px-3 sm:py-3 sm:px-4 rounded-xl font-black text-[11px] sm:text-xs md:text-sm tracking-tight sm:tracking-wider uppercase transition-all flex items-center justify-center text-center gap-2 cursor-pointer ${
               activeTab === "internal"
                 ? "bg-gradient-to-r from-[#38b6ff]/25 to-[#38b6ff]/10 text-[#38b6ff] border border-[#38b6ff]/50 shadow-[0_0_20px_rgba(56,182,255,0.2)]"
                 : "text-arcade-muted hover:text-white border border-transparent hover:bg-white/5"
             }`}
           >
-            <GraduationCap className={`h-4 w-4 ${activeTab === "internal" ? "text-[#38b6ff]" : ""}`} />
+            <GraduationCap className={`h-4 w-4 shrink-0 ${activeTab === "internal" ? "text-[#38b6ff]" : ""}`} />
             <span>Internal Participant Video</span>
           </button>
         </div>
