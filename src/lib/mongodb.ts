@@ -45,6 +45,16 @@ export async function connectToDatabase() {
     return mongoose;
   }
 
-  global._mongooseConnection = global._mongooseConnection ?? mongoose.connect(uri);
+  if (!global._mongooseConnection) {
+    global._mongooseConnection = mongoose
+      .connect(uri, {
+        serverSelectionTimeoutMS: 5000,
+      })
+      .catch((err) => {
+        global._mongooseConnection = undefined;
+        throw err;
+      });
+  }
+
   return global._mongooseConnection;
 }

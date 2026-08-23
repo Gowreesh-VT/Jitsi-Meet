@@ -27,28 +27,36 @@ const certificateImageUrls = [
 export default async function LandingPage() {
   const session = await getServerSession(authOptions);
   
-  await connectToDatabase();
+  let nextEvent: any = null;
+  let events: any[] = [];
+  let userRegistrations: string[] = [];
 
-  const nextEvent = await Event.findOne({ 
-    isPublished: true, 
-    startTime: { $gt: new Date() } 
-  }).sort({ startTime: 1 });
+  try {
+    await connectToDatabase();
+
+    nextEvent = await Event.findOne({ 
+      isPublished: true, 
+      startTime: { $gt: new Date() } 
+    }).sort({ startTime: 1 });
+
+    events = await Event.find({ isPublished: true }).sort({ startTime: 1 });
+
+    if (session?.user?.id) {
+      const regs = await Registration.find({ userId: session.user.id });
+      userRegistrations = regs.map(r => String(r.eventId));
+    }
+  } catch (error) {
+    console.error("Database connection/query failed on LandingPage:", error);
+  }
 
   const nextEventWindow = nextEvent
     ? formatEventWindow(nextEvent.startTime, nextEvent.endTime)
     : null;
 
-  const events = await Event.find({ isPublished: true }).sort({ startTime: 1 });
   const workshopEvents = events.filter(e => e.type !== "hackathon").map(serializeEvent);
   const hackathonEvents = events.filter(e => e.type === "hackathon").map(serializeEvent);
 
-  let userRegistrations: string[] = [];
-  if (session?.user.id) {
-    const regs = await Registration.find({ userId: session.user.id });
-    userRegistrations = regs.map(r => String(r.eventId));
-  }
-
-  const isVitStudent = isVitStudentEmail(session?.user.email);
+  const isVitStudent = isVitStudentEmail(session?.user?.email);
 
   return (
     <div className="schedule-retro relative min-h-screen">
@@ -211,24 +219,34 @@ export default async function LandingPage() {
                       name: "HackerRank",
                       url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEv3e6MOhWmy6tpuiexQX81z0fGaEJbT52MDPl",
                       accent: "from-emerald-400/20 via-emerald-400/5 to-transparent",
+                      href: "https://www.hackerrank.com/",
                     },
                     {
                       name: "Google Gemini",
                       url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEFoJjaslA09oihcYfavCU8QVN7Oswmu3e6j14",
                       accent: "from-violet-400/20 via-violet-400/5 to-transparent",
+                      href: "https://gemini.google.com/",
                     },
                     {
                       name: ".xyz Domain",
                       url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEQEDVFkl1Hn7zksoqKEgIFuwlcDyadAj6SP0V",
                       accent: "from-blue-400/20 via-blue-400/5 to-transparent",
+                      href: "https://gen.xyz/",
                     },
                     {
                       name: "TrainSec",
                       url: "https://h8z6stjynz.ufs.sh/f/nEev6VX4XfKEHC2fKst1ltk8sCVhvgKTpUzQyXnafuj70O5i",
                       accent: "from-rose-400/20 via-rose-400/5 to-transparent",
+                      href: "https://trainsec.net/",
                     }
                   ].map((sponsor) => (
-                    <div key={sponsor.name} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10">
+                    <a
+                      key={sponsor.name}
+                      href={sponsor.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#ffafd5]/30 hover:bg-white/10 cursor-pointer block"
+                    >
                       <div className={`absolute inset-0 bg-linear-to-br ${sponsor.accent}`} />
                       <div className="relative flex min-h-36 flex-col items-center justify-between gap-3">
                         <div className="flex h-20 w-full items-center justify-center rounded-xl bg-transparent px-0 py-0 transition-transform duration-300 group-hover:scale-[1.02]">
@@ -245,7 +263,7 @@ export default async function LandingPage() {
                           <p className="mt-2 text-xs uppercase tracking-[0.22em] text-arcade-muted sm:tracking-[0.28em]">Official sponsor</p>
                         </div>
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </div>
               </div>
