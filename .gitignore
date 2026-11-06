@@ -43,4 +43,3 @@ next-env.d.ts
 # generated outputs
 output/
 exports/
-config.bat
